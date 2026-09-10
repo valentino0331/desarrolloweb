@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "ecotechtrack-api-v2",
+		"name": "EcoTechTrack - API REST Trazabilidad RAEE (UTP Avance 1)",
+		"description": "Colección Postman para probar los endpoints REST del proyecto EcoTechTrack - Avance de Proyecto Final 1, incluyendo Residuos, Almacenes, Empresas Gestoras y Trazabilidad.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Residuos Electrónicos",
+			"item": [
+				{
+					"name": "1. Listar todos los residuos (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Filtrar por Estado (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos?estado=DECLARADO_BAJA",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos"],
+							"query": [
+								{
+									"key": "estado",
+									"value": "DECLARADO_BAJA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener residuo por ID (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Obtener residuo por Código RAEE (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/codigo/RAEE-2026-001",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "codigo", "RAEE-2026-001"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Historial de Trazabilidad del Residuo (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/2/historial",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "2", "historial"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Registrar nuevo residuo con relaciones (POST 201 Created)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"codigoIdentificacion\": \"RAEE-2026-005\",\n  \"descripcion\": \"Impresora Multifuncional Láser Enterprise M605\",\n  \"categoria\": \"EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES\",\n  \"marca\": \"HP\",\n  \"modelo\": \"LaserJet Enterprise M605\",\n  \"numeroSerie\": \"HP-LSR-998811\",\n  \"pesoKg\": 21.3,\n  \"estado\": \"DECLARADO_BAJA\",\n  \"almacenId\": 1,\n  \"empresaGestoraId\": 1,\n  \"observaciones\": \"Fusor averiado, tarjeta lógica descontinuada\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/residuos",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Actualizar residuo por ID (PUT 200 OK)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"codigoIdentificacion\": \"RAEE-2026-001\",\n  \"descripcion\": \"Servidor Torre HP ProLiant ML350 Gen9 (Revisado)\",\n  \"categoria\": \"EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES\",\n  \"marca\": \"HP\",\n  \"modelo\": \"ProLiant ML350 Gen9\",\n  \"numeroSerie\": \"CZ25410ABCD\",\n  \"pesoKg\": 32.4,\n  \"estado\": \"ALMACENADO_TEMPORAL\",\n  \"almacenId\": 2,\n  \"empresaGestoraId\": 1,\n  \"observaciones\": \"Reubicado al Depósito B\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. Cambiar estado en cadena de trazabilidad (PATCH 200 OK)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nuevoEstado\": \"EN_TRANSITO\",\n  \"observaciones\": \"Entregado al transportista con guía de remisión N° 004-9812\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/1/estado",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "1", "estado"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9. Eliminar residuo (DELETE 204 No Content)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/residuos/4",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "residuos", "4"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Empresas Gestoras RAEE",
+			"item": [
+				{
+					"name": "1. Listar todas las Empresas Gestoras (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/empresas-gestoras",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "empresas-gestoras"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Empresa Gestora por ID (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/empresas-gestoras/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "empresas-gestoras", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Registrar Empresa Gestora (POST 201 Created)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ruc\": \"20485963214\",\n  \"razonSocial\": \"Gestión y Disposición Ecológica S.A.C.\",\n  \"registroAutorizacion\": \"EO-RS-0250-2024-MINAM\",\n  \"email\": \"operaciones@gdeperu.com\",\n  \"telefono\": \"+51 1 789-4500\",\n  \"direccion\": \"Zona Industrial Ventanilla Mz. C Lote 4\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/empresas-gestoras",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "empresas-gestoras"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Almacenes y Custodia Temporal",
+			"item": [
+				{
+					"name": "1. Listar todos los Almacenes (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/almacenes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "almacenes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Obtener Almacén por ID (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/almacenes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "almacenes", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Registrar Almacén (POST 201 Created)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"codigo\": \"ALM-SUR-04\",\n  \"nombre\": \"Depósito Temporal Sede Sur\",\n  \"sede\": \"Campus Sur - Villa El Salvador\",\n  \"direccion\": \"Av. El Sol 890\",\n  \"capacidadKg\": 3000.0,\n  \"responsable\": \"Ing. Jorge Huamán\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/almacenes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "almacenes"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

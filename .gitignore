@@ -1,0 +1,23 @@
+# Maven distribution (binarios pesados locales)
+apache-maven-3.9.9/
+
+# Carpetas de compilación y empaquetado Maven
+target/
+**/target/
+*.class
+
+# Logs
+*.log
+
+# IDEs y Editores
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Archivos de SO
+Thumbs.db
+Desktop.ini
+.DS_Store

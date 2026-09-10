@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTechTrack - Presentación Avance 1</title>
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-card: rgba(17, 24, 39, 0.85);
+            --bg-card-hover: rgba(31, 41, 55, 0.9);
+            --accent-green: #10b981;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-glow: rgba(16, 185, 129, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+        }
+
+        /* Barra Superior */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 32px;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            color: #052014;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .meta-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .speaker-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .speaker-badge.i1 {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        .speaker-badge.i2 {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        .speaker-badge.i3 {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        /* Contenedor de Diapositivas */
+        main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            perspective: 1000px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1200px;
+            height: 82vh;
+            max-height: 720px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 40px 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px var(--border-glow);
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: all;
+            z-index: 5;
+        }
+
+        /* Tipografía de Diapositiva */
+        .slide-header {
+            margin-bottom: 24px;
+        }
+
+        .slide-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .slide-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: grid;
+            gap: 20px;
+        }
+
+        /* Cuadrículas y Componentes */
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title.cyan { color: var(--accent-cyan); }
+        .card-title.purple { color: var(--accent-purple); }
+        .card-title.amber { color: var(--accent-amber); }
+        .card-title.blue { color: var(--accent-blue); }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        ul.styled-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        ul.styled-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.95rem;
+            color: #d1d5db;
+            line-height: 1.4;
+        }
+
+        ul.styled-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .badge-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            color: #e2e8f0;
+            margin: 2px;
+        }
+
+        /* Tablas */
+        table.custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        table.custom-table th, table.custom-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        table.custom-table th {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .method-get { color: #34d399; font-weight: bold; }
+        .method-post { color: #60a5fa; font-weight: bold; }
+        .method-put { color: #fbbf24; font-weight: bold; }
+        .method-patch { color: #c084fc; font-weight: bold; }
+        .method-delete { color: #f87171; font-weight: bold; }
+
+        /* Código y Snippets */
+        .code-box {
+            background: #050811;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #93c5fd;
+            line-height: 1.45;
+            overflow-x: auto;
+        }
+
+        /* Barra Inferior y Controles */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 32px;
+            background: rgba(11, 15, 25, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-green);
+            color: #fff;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .slide-counter {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn-notes {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-notes:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Panel de Notas del Expositor */
+        #speaker-notes-panel {
+            position: fixed;
+            bottom: 65px;
+            right: 32px;
+            width: 480px;
+            max-height: 280px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(14px);
+            z-index: 50;
+            display: none;
+            overflow-y: auto;
+        }
+
+        #speaker-notes-panel.open {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .notes-header {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .notes-content {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #e2e8f0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header>
+        <div class="brand">
+            <span class="brand-badge">UTP</span>
+            <span>EcoTechTrack</span>
+            <span style="color: var(--text-muted); font-weight: 400;">| Avance de Proyecto Final 1</span>
+        </div>
+        <div class="meta-info">
+            <span id="current-speaker" class="speaker-badge">👥 Todo el Equipo</span>
+            <span>Desarrollo Web Integrado</span>
+        </div>
+    </header>
+
+    <!-- ÁREA DE DIAPOSITIVAS -->
+    <main>
+
+        <!-- DIAPOSITIVA 1: PORTADA -->
+        <div class="slide active" data-speaker="👥 Todo el Equipo" data-notes="Presentación inicial de todo el grupo. Dar la bienvenida al profesor y jurado, presentar el nombre del proyecto EcoTechTrack y a cada uno de los 3 integrantes antes de dar paso al Integrante 1.">
+            <div class="slide-header">
+                <div class="slide-tag">Avance de Proyecto Final 1 • Semanas 1 a 4</div>
+                <h1 class="slide-title">EcoTechTrack</h1>
+                <p class="slide-subtitle">Plataforma Web para Trazabilidad Integral de Residuos de Aparatos Eléctricos y Electrónicos (RAEE)</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="card-title cyan">🌿 El Reto Ecológico y Tecnológico</div>
+                    <p class="card-text">
+                        Garantizar la trazabilidad y fiscalización del ciclo de vida de los equipos tecnológicos obsoletos declarados de baja en instituciones corporativas y educativas, hasta su valorización o disposición final según normativas ambientales.
+                    </p>
+                    <div style="margin-top: 20px;">
+                        <span class="badge-pill">Spring Boot 3.3.4</span>
+                        <span class="badge-pill">Java 17 / 21</span>
+                        <span class="badge-pill">H2 Database</span>
+                        <span class="badge-pill">TDD / MockMvc</span>
+                        <span class="badge-pill">RESTful API</span>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="card-title">👥 Equipo de Desarrollo (3 Integrantes)</div>
+                    <ul class="styled-list">
+                        <li>
+                            <strong style="color: #34d399;">Integrante 1:</strong> Arquitectura, Base de Datos H2, Entidad JPA y Capa de Negocio (Service).
+                        </li>
+                        <li>
+                            <strong style="color: #a78bfa;">Integrante 2:</strong> Patrón DTO, Validaciones Bean, Endpoints RESTful y Manejo Global de Errores.
+                        </li>
+                        <li>
+                            <strong style="color: #fbbf24;">Integrante 3:</strong> Metodología TDD, Pruebas Unitarias MockMvc, Postman y Demostración en Vivo.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 2: ARQUITECTURA GENERAL -->
+        <div class="slide" data-speaker="👤 Integrante 1" data-notes="Integrante 1 explica la arquitectura en capas. Resaltar la inyección de dependencias por constructor sin usar @Autowired en atributos (buena práctica explicada en la Semana 2), y la configuración de H2 como base de datos en memoria para desarrollo ágil y reproducible.">
+            <div class="slide-header">
+                <div class="slide-tag">Arquitectura de Software • Integrante 1</div>
+                <h2 class="slide-title">Arquitectura en Capas y Stack Tecnológico</h2>
+                <p class="slide-subtitle">Desacoplamiento, inyección de dependencias y persistencia ágil</p>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <div class="card-title">🏛️ Patrón por Capas</div>
+                    <ul class="styled-list">
+                        <li><strong>Capa Web:</strong> <code>ResiduoController</code> gestiona el protocolo HTTP.</li>
+                        <li><strong>Capa Negocio:</strong> <code>ResiduoServiceImpl</code> aplica validaciones y reglas.</li>
+                        <li><strong>Capa Acceso a Datos:</strong> <code>ResiduoRepository</code> con Spring Data JPA.</li>
+                        <li><strong>Constructor Injection:</strong> Alta testabilidad y desacoplamiento.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">⚡ Persistencia H2</div>
+                    <ul class="styled-list">
+                        <li>Base de datos relacional en memoria: <code>jdbc:h2:mem:ecotechtrackdb</code>.</li>
+                        <li>Consola gráfica web activa en <code>/h2-console</code> para inspección en tiempo real.</li>
+                        <li>Hibernate con <code>ddl-auto=update</code> y formateo de consultas SQL activado.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title purple">📦 Stack del Ecosistema</div>
+                    <ul class="styled-list">
+                        <li><strong>Spring Boot 3.3.4</strong> con Tomcat embebido.</li>
+                        <li><strong>Lombok</strong> para código limpio (<code>@Data</code>, <code>@Builder</code>).</li>
+                        <li><strong>Jakarta Validation</strong> para validación declarativa.</li>
+                        <li><strong>JUnit 5 + MockMvc</strong> para aseguramiento de calidad.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 3: MODELO DE DOMINIO Y ENTIDADES -->
+        <div class="slide" data-speaker="👤 Integrante 1" data-notes="Integrante 1 explica la entidad JPA ResiduoElectronico. Destacar los callbacks @PrePersist y @PreUpdate para la auditoría automática del registro, y el uso de los Enums CategoriaRAEE y EstadoResiduo que modelan el ciclo de vida de trazabilidad.">
+            <div class="slide-header">
+                <div class="slide-tag">Modelo de Datos • Integrante 1</div>
+                <h2 class="slide-title">Entidad JPA y Ciclo de Vida de Trazabilidad</h2>
+                <p class="slide-subtitle">Mapeo objeto-relacional y estados de los residuos electrónicos</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title">🗄️ Entidad <code>ResiduoElectronico</code></div>
+                    <div class="code-box">
+@Entity
+@Table(name = "residuos_electronicos")
+public class ResiduoElectronico {
+    @Id @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String codigoIdentificacion;
+    private Double pesoKg;
+    @Enumerated(EnumType.STRING)
+    private CategoriaRAEE categoria;
+    @Enumerated(EnumType.STRING)
+    private EstadoResiduo estado;
+    
+    @PrePersist
+    public void prePersist() {
+        this.fechaRegistro = LocalDateTime.now();
+        if(this.estado == null) this.estado = EstadoResiduo.DECLARADO_BAJA;
+    }
+}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title amber">🔄 Cadena de Estados de Trazabilidad</div>
+                    <ul class="styled-list">
+                        <li><span class="badge-pill">1. DECLARADO_BAJA</span> Equipo dado de baja en inventario TI.</li>
+                        <li><span class="badge-pill">2. ALMACENADO_TEMPORAL</span> En depósito a la espera de recojo.</li>
+                        <li><span class="badge-pill">3. SOLICITUD_RECOJO</span> Notificación a la EPS de gestión RAEE.</li>
+                        <li><span class="badge-pill">4. EN_TRANSITO</span> Transporte hacia la planta autorizada.</li>
+                        <li><span class="badge-pill">5. EN_PLANTA_VALORIZACION</span> Desensamblaje y recuperación.</li>
+                        <li><span class="badge-pill">6. DISPOSICION_FINAL</span> Confinamiento seguro de materiales tóxicos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 4: SERVICIO Y DATA SEEDING -->
+        <div class="slide" data-speaker="👤 Integrante 1" data-notes="Integrante 1 concluye su parte explicando ResiduoServiceImpl y DataInitializer. Mencionar que el servicio comprueba si el código RAEE ya existe lanzando una BadRequestException, y que DataInitializer utiliza un CommandLineRunner para sembrar 4 registros automáticamente.">
+            <div class="slide-header">
+                <div class="slide-tag">Lógica de Negocio • Integrante 1</div>
+                <h2 class="slide-title">Lógica de Negocio (Service) y Data Seeding</h2>
+                <p class="slide-subtitle">Reglas operativas y generación automática de datos de prueba</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title">⚙️ Reglas en <code>ResiduoServiceImpl</code></div>
+                    <ul class="styled-list">
+                        <li><strong>Control de Duplicados:</strong> Verifica con <code>existsByCodigoIdentificacion</code> antes de registrar; evita registros inconsistentes arrojando <code>BadRequestException</code>.</li>
+                        <li><strong>Filtrado Dinámico:</strong> Búsqueda flexible por Estado de Trazabilidad o Categoría RAEE mediante métodos derivados de Spring Data.</li>
+                        <li><strong>Método <code>cambiarEstado()</code>:</strong> Actualiza el ciclo de vida, almacén y empresa gestora en una sola transacción segura.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">🌱 Semillero de Datos: <code>DataInitializer</code></div>
+                    <p class="card-text">
+                        Implementa <code>CommandLineRunner</code> para precargar datos realistas apenas inicia el servidor Tomcat:
+                    </p>
+                    <ul class="styled-list" style="margin-top: 10px;">
+                        <li><strong>RAEE-2026-001:</strong> Servidor HP ProLiant (DECLARADO_BAJA)</li>
+                        <li><strong>RAEE-2026-002:</strong> Lote Monitores LED Samsung (ALMACENADO_TEMPORAL)</li>
+                        <li><strong>RAEE-2026-003:</strong> Banco Baterías UPS APC (SOLICITUD_RECOJO)</li>
+                        <li><strong>RAEE-2026-004:</strong> Lote Laptops Lenovo T470 (EN_TRANSITO)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 5: PATRÓN DTO Y BEAN VALIDATION -->
+        <div class="slide" data-speaker="👤 Integrante 2" data-notes="Integrante 2 toma la palabra. Explicar por qué es mala práctica exponer las entidades JPA directamente y cómo los DTOs desacoplan la API. Detallar las anotaciones de validación como @NotBlank y @Positive que evitan que datos inválidos lleguen a la base de datos.">
+            <div class="slide-header">
+                <div class="slide-tag">Capa Web y Seguridad de Entrada • Integrante 2</div>
+                <h2 class="slide-title">Patrón DTO y Validación Declarativa</h2>
+                <p class="slide-subtitle">Desacoplamiento arquitectónico y validación con Jakarta Bean Validation</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title purple">🛡️ ¿Por qué usamos el Patrón DTO?</div>
+                    <ul class="styled-list">
+                        <li><strong>Seguridad:</strong> Previene vulnerabilidades de asignación masiva (Mass Assignment) impidiendo modificar IDs o fechas arbitrariamente.</li>
+                        <li><strong>Desacoplamiento:</strong> Los cambios en la tabla relacional no rompen los contratos JSON consumidos por los clientes (Angular/Mobile).</li>
+                        <li><strong>DTOs Diseñados:</strong> <code>ResiduoRequestDTO</code>, <code>ResiduoResponseDTO</code> y <code>CambioEstadoDTO</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">✅ Validaciones en <code>ResiduoRequestDTO</code></div>
+                    <div class="code-box">
+public class ResiduoRequestDTO {
+    @NotBlank(message = "El código es obligatorio")
+    private String codigoIdentificacion;
+
+    @NotBlank(message = "La descripción no puede estar vacía")
+    private String descripcion;
+
+    @NotNull(message = "El peso es requerido")
+    @Positive(message = "El peso en Kg debe ser mayor a 0")
+    private Double pesoKg;
+
+    @NotNull(message = "Debe clasificar la categoría RAEE")
+    private CategoriaRAEE categoria;
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 6: ENDPOINTS RESTFUL -->
+        <div class="slide" data-speaker="👤 Integrante 2" data-notes="Integrante 2 explica la tabla de endpoints y verbos HTTP. Resaltar el uso de @CrossOrigin para permitir que Angular se conecte en el futuro sin problemas de CORS, y la diferencia entre PUT (actualización total) y PATCH (cambio de estado).">
+            <div class="slide-header">
+                <div class="slide-tag">Capa Web y Protocolo HTTP • Integrante 2</div>
+                <h2 class="slide-title">API RESTful en <code>ResiduoController</code></h2>
+                <p class="slide-subtitle">Diseño estricto de endpoints, verbos HTTP y códigos de estado</p>
+            </div>
+            <div class="slide-body">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Endpoint URL</th>
+                            <th>Función de Negocio</th>
+                            <th>Código Éxito</th>
+                            <th>Códigos Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="method-get">GET</span></td>
+                            <td><code>/api/residuos</code></td>
+                            <td>Listar todo (con filtros <code>?estado=</code> o <code>?categoria=</code>)</td>
+                            <td><span class="badge-pill">200 OK</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-get">GET</span></td>
+                            <td><code>/api/residuos/{id}</code></td>
+                            <td>Consultar residuo por ID primario</td>
+                            <td><span class="badge-pill">200 OK</span></td>
+                            <td><span class="badge-pill">404 Not Found</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-get">GET</span></td>
+                            <td><code>/api/residuos/codigo/{cod}</code></td>
+                            <td>Consultar residuo por código único RAEE</td>
+                            <td><span class="badge-pill">200 OK</span></td>
+                            <td><span class="badge-pill">404 Not Found</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-post">POST</span></td>
+                            <td><code>/api/residuos</code></td>
+                            <td>Dar de baja y registrar un nuevo residuo (<code>@Valid</code>)</td>
+                            <td><span class="badge-pill">201 Created</span></td>
+                            <td><span class="badge-pill">400 Bad Request</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-put">PUT</span></td>
+                            <td><code>/api/residuos/{id}</code></td>
+                            <td>Actualización completa de datos</td>
+                            <td><span class="badge-pill">200 OK</span></td>
+                            <td><span class="badge-pill">400 / 404</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-patch">PATCH</span></td>
+                            <td><code>/api/residuos/{id}/estado</code></td>
+                            <td>Transición de estado en la cadena logística</td>
+                            <td><span class="badge-pill">200 OK</span></td>
+                            <td><span class="badge-pill">400 / 404</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="method-delete">DELETE</span></td>
+                            <td><code>/api/residuos/{id}</code></td>
+                            <td>Eliminación física del residuo</td>
+                            <td><span class="badge-pill">204 No Content</span></td>
+                            <td><span class="badge-pill">404 Not Found</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 7: MANEJO GLOBAL DE ERRORES -->
+        <div class="slide" data-speaker="👤 Integrante 2" data-notes="Integrante 2 concluye su parte con el manejo global de excepciones. Explicar cómo @RestControllerAdvice intercepta cualquier error antes de llegar al cliente y devuelve ErrorResponseDTO uniforme, explicando los detalles de cada campo que falló.">
+            <div class="slide-header">
+                <div class="slide-tag">Control de Excepciones • Integrante 2</div>
+                <h2 class="slide-title">Manejo Global con <code>@RestControllerAdvice</code></h2>
+                <p class="slide-subtitle">Centralización de fallos sin bloques try-catch dispersos</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title purple">⚠️ Intercepción de Excepciones</div>
+                    <ul class="styled-list">
+                        <li><code>ResourceNotFoundException</code>: Mapeado automáticamente a HTTP <strong>404 Not Found</strong>.</li>
+                        <li><code>BadRequestException</code>: Mapeado a HTTP <strong>400 Bad Request</strong>.</li>
+                        <li><code>MethodArgumentNotValidException</code>: Captura fallos de Bean Validation y compila los campos erróneos en una lista legible.</li>
+                        <li><code>HttpMessageNotReadableException</code>: Captura JSON malformados o valores de enum inválidos (HTTP 400).</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">📋 Respuesta Uniforme <code>ErrorResponseDTO</code></div>
+                    <div class="code-box">
+{
+  "timestamp": "2026-09-08 22:15:30",
+  "status": 400,
+  "error": "Error de Validación de Datos",
+  "mensaje": "Uno o más campos enviados no cumplen con los requisitos",
+  "path": "/api/residuos",
+  "detalles": [
+    "codigoIdentificacion: El código es obligatorio",
+    "pesoKg: El peso en Kg debe ser mayor a 0"
+  ]
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 8: TDD Y MOCKMVC -->
+        <div class="slide" data-speaker="👤 Integrante 3" data-notes="Integrante 3 toma la palabra. Explicar el enfoque Test-Driven Development visto en la Semana 3. Destacar que las pruebas se realizan con @WebMvcTest, levantando únicamente la capa web y simulando la capa de servicio con @MockBean para que las pruebas sean ultrarrápidas y aisladas.">
+            <div class="slide-header">
+                <div class="slide-tag">Aseguramiento de Calidad • Integrante 3</div>
+                <h2 class="slide-title">Pruebas Unitarias Web con TDD y MockMvc</h2>
+                <p class="slide-subtitle">Validación automatizada de controladores con JUnit 5, Mockito y MockMvc</p>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <div class="card-title amber">🧪 Enfoque TDD (Semana 3)</div>
+                    <p class="card-text">
+                        Diseño de las especificaciones de los endpoints y los códigos de respuesta esperados antes de la integración final, garantizando cobertura de casos positivos y negativos.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">⚡ <code>@WebMvcTest</code> Ligero</div>
+                    <p class="card-text">
+                        Prueba exclusivamente la capa web (controlador y mapeo JSON). No levanta la base de datos real ni servidores externos, ejecutando los tests en milisegundos.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🎭 Aislamiento con <code>@MockBean</code></div>
+                    <p class="card-text">
+                        Simula las respuestas de <code>ResiduoService</code> con Mockito (<code>when(...).thenReturn(...)</code>), aislando la prueba de cualquier fallo colateral.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 9: CASOS DE PRUEBA AUTOMATIZADOS -->
+        <div class="slide" data-speaker="👤 Integrante 3" data-notes="Integrante 3 detalla los 7 casos de prueba unitarios en ResiduoControllerTest. Resaltar la prueba testRegistrarResiduoConValidacionFallida, donde con verify(residuoService, never()) se demuestra formalmente que ante un dato inválido el servicio nunca llega a invocarse.">
+            <div class="slide-header">
+                <div class="slide-tag">Suite de Pruebas • Integrante 3</div>
+                <h2 class="slide-title">Casos de Prueba Automatizados Implementados</h2>
+                <p class="slide-subtitle">Cobertura exhaustiva en <code>ResiduoControllerTest.java</code></p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title">🟢 Pruebas de "Camino Feliz"</div>
+                    <ul class="styled-list">
+                        <li><code>testListarResiduosExitoso</code>: Valida <code>status().isOk()</code> y contenido de array JSON con Hamcrest.</li>
+                        <li><code>testObtenerPorIdExitoso</code>: Valida <code>200 OK</code> consultando por ID existente.</li>
+                        <li><code>testRegistrarResiduoExitoso</code>: Valida <code>status().isCreated()</code> (201) al enviar DTO válido.</li>
+                        <li><code>testCambiarEstadoExitoso</code>: Valida petición <code>PATCH</code> retornando <code>EN_TRANSITO</code>.</li>
+                        <li><code>testEliminarResiduoExitoso</code>: Valida <code>status().isNoContent()</code> (204).</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title amber">🔴 Pruebas de Escenarios de Error</div>
+                    <ul class="styled-list">
+                        <li>
+                            <code>testObtenerPorIdNoEncontrado</code>: Valida <code>404 Not Found</code> cuando el servicio lanza <code>ResourceNotFoundException</code>.
+                        </li>
+                        <li>
+                            <code>testRegistrarResiduoConValidacionFallida</code>: Envía datos con strings vacíos y peso negativo (-5.0).  
+                            Verifica respuesta <code>400 Bad Request</code> y aplica:
+                            <div class="code-box" style="margin-top: 6px;">
+verify(residuoService, never()).registrar(any());
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Garantiza que ningún dato inválido llegue jamás al servicio.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 10: DEMOSTRACIÓN EN VIVO (POSTMAN Y H2) -->
+        <div class="slide" data-speaker="👤 Integrante 3" data-notes="Integrante 3 ejecuta la demostración en vivo. Abrir la terminal o IDE mostrando los tests en verde (mvn test), enviar una petición en Postman y mostrar en la consola H2 que el dato fue guardado con éxito.">
+            <div class="slide-header">
+                <div class="slide-tag">Demostración en Vivo • Integrante 3</div>
+                <h2 class="slide-title">Verificación con Postman y Consola H2</h2>
+                <p class="slide-subtitle">Pruebas de integración end-to-end con datos en tiempo real</p>
+            </div>
+            <div class="slide-body grid-3">
+                <div class="card">
+                    <div class="card-title">1️⃣ Tests en Verde</div>
+                    <p class="card-text">
+                        Ejecución en consola de:
+                    </p>
+                    <div class="code-box" style="margin-top: 8px;">
+mvn test
+                    </div>
+                    <p class="card-text" style="color: #34d399; font-weight: bold; margin-top: 8px;">
+                        ✓ 7 tests passing (0 failures)
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">2️⃣ Colección Postman</div>
+                    <p class="card-text">
+                        Uso de <code>ecotechtrack_postman_collection.json</code>:
+                    </p>
+                    <ul class="styled-list">
+                        <li><code>POST</code> nuevo residuo: Laptop Dell.</li>
+                        <li><code>PATCH</code> cambio a <code>EN_TRANSITO</code>.</li>
+                        <li><code>GET</code> con filtro <code>?estado=EN_TRANSITO</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title purple">3️⃣ Consola Web H2</div>
+                    <p class="card-text">
+                        Inspección en <code>/h2-console</code>:
+                    </p>
+                    <div class="code-box" style="margin-top: 8px;">
+SELECT id, codigo_identificacion, estado, fecha_registro 
+FROM residuos_electronicos;
+                    </div>
+                    <p class="card-text" style="font-size: 0.85rem; margin-top: 6px; color: var(--text-muted);">
+                        Evidencia la persistencia física en memoria.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAPOSITIVA 11: CONCLUSIONES Y SIGUIENTES PASOS -->
+        <div class="slide" data-speaker="👥 Todo el Equipo" data-notes="Conclusiones finales a cargo de todo el equipo. Agradecer por la atención y abrir espacio para la ronda de preguntas técnicas del docente.">
+            <div class="slide-header">
+                <div class="slide-tag">Conclusiones • Todo el Equipo</div>
+                <h2 class="slide-title">Conclusiones y Hoja de Ruta (Avance 2)</h2>
+                <p class="slide-subtitle">Logros alcanzados en las Semanas 1-4 y proyección futura</p>
+            </div>
+            <div class="slide-body grid-2">
+                <div class="card">
+                    <div class="card-title">🏆 Logros de este Avance 1</div>
+                    <ul class="styled-list">
+                        <li>Arquitectura robusta en Spring Boot 3 cumpliendo los principios SOLID y Clean Code.</li>
+                        <li>Validación estricta de entrada con Bean Validation y DTOs seguros.</li>
+                        <li>API RESTful completa con códigos HTTP estándar y trazabilidad mediante PATCH.</li>
+                        <li>Cobertura de pruebas unitarias al 100% en controladores con MockMvc (TDD).</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title cyan">🚀 Próximos Pasos (Semanas 5 a 8)</div>
+                    <ul class="styled-list">
+                        <li>Integración de frontend SPA con <strong>Angular</strong> consumiendo la API mediante TypeScript y RxJS.</li>
+                        <li>Migración opcional de base de datos a PostgreSQL / MySQL para persistencia productiva.</li>
+                        <li>Dashboard interactivo de estadísticas de valorización ecológica y peso recuperado de RAEE.</li>
+                        <li>Implementación de seguridad y autenticación basada en roles con Spring Security y JWT.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- PANEL DESPLEGABLE DE NOTAS DEL EXPOSITOR -->
+    <div id="speaker-notes-panel">
+        <div class="notes-header">
+            <span>🎙️ Notas del Expositor (Speech)</span>
+            <span id="notes-speaker-name" style="color: var(--accent-green);"></span>
+        </div>
+        <div class="notes-content" id="notes-text">
+            Cargando notas...
+        </div>
+    </div>
+
+    <!-- BARRA INFERIOR / CONTROLES -->
+    <footer>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Teclas: <strong>←</strong> / <strong>→</strong> (Cambiar diapositiva) | <strong>N</strong> (Notas de voz) | <strong>F</strong> (Pantalla completa)
+        </div>
+
+        <div class="nav-controls">
+            <button id="btn-toggle-notes" class="btn-notes">🎙️ Ver Speech (N)</button>
+            <button id="btn-prev" class="btn-nav">‹ Anterior</button>
+            <span id="slide-indicator" class="slide-counter">1 / 11</span>
+            <button id="btn-next" class="btn-nav">Siguiente ›</button>
+        </div>
+    </footer>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('btn-prev');
+        const nextBtn = document.getElementById('btn-next');
+        const indicator = document.getElementById('slide-indicator');
+        const speakerTag = document.getElementById('current-speaker');
+        const notesPanel = document.getElementById('speaker-notes-panel');
+        const notesText = document.getElementById('notes-text');
+        const notesSpeakerName = document.getElementById('notes-speaker-name');
+        const toggleNotesBtn = document.getElementById('btn-toggle-notes');
+
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function updateSlide(index) {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === index);
+            });
+
+            const activeSlide = slides[index];
+            const speaker = activeSlide.getAttribute('data-speaker') || '👥 Todo el Equipo';
+            const notes = activeSlide.getAttribute('data-notes') || 'Sin notas adicionales.';
+
+            // Actualizar etiqueta de orador
+            speakerTag.textContent = speaker;
+            speakerTag.className = 'speaker-badge';
+            if (speaker.includes('Integrante 1')) speakerTag.classList.add('i1');
+            else if (speaker.includes('Integrante 2')) speakerTag.classList.add('i2');
+            else if (speaker.includes('Integrante 3')) speakerTag.classList.add('i3');
+
+            // Actualizar notas
+            notesSpeakerName.textContent = speaker;
+            notesText.textContent = notes;
+
+            // Actualizar botones y contador
+            indicator.textContent = `${index + 1} / ${totalSlides}`;
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide(currentSlide);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide(currentSlide);
+            }
+        });
+
+        toggleNotesBtn.addEventListener('click', () => {
+            notesPanel.classList.toggle('open');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlide(currentSlide);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlide(currentSlide);
+                }
+            } else if (e.key === 'n' || e.key === 'N') {
+                notesPanel.classList.toggle('open');
+            } else if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+        });
+
+        // Inicializar
+        updateSlide(0);
+    </script>
+</body>
+</html>

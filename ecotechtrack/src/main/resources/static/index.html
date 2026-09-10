@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTechTrack - Plataforma de Trazabilidad RAEE</title>
+  <meta name="description" content="Sistema de trazabilidad integral para Residuos de Aparatos Eléctricos y Electrónicos (RAEE) con Spring Boot 3 y Arquitectura en Capas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --bg-card: rgba(16, 24, 40, 0.75);
+      --bg-card-solid: #0f172a;
+      --bg-card-hover: rgba(26, 38, 63, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(16, 185, 129, 0.25);
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --cyan: #06b6d4;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 25%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #070b14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Top Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 36px;
+      background: rgba(11, 17, 30, 0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #032314;
+      font-size: 1.3rem;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .badge-utp {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-size: 0.8rem;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    .api-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #059669);
+      color: #032314;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-h2 {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .btn-h2:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 30px 36px 60px;
+    }
+
+    /* Hero / Stat Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--card-accent, var(--primary));
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .stat-title {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--card-accent, var(--primary));
+    }
+
+    .stat-value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .stat-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    /* Content Layout */
+    .dashboard-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-lg);
+      padding: 24px 28px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .panel-title-area h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Search & Filters */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 11px 16px 11px 40px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      transition: all 0.2s;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .filter-select {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 11px 16px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      cursor: pointer;
+      min-width: 180px;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .filter-select option {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    /* Table / Card List */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    thead th {
+      padding: 12px 18px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      text-align: left;
+      border: none;
+    }
+
+    tbody tr {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-color);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 41, 59, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    tbody td {
+      padding: 16px 18px;
+      font-size: 0.88rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    tbody td:first-child {
+      border-left: 1px solid rgba(255, 255, 255, 0.04);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    tbody td:last-child {
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .code-badge {
+      font-family: monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      display: inline-block;
+    }
+
+    .item-desc {
+      font-weight: 600;
+      color: var(--text-main);
+      display: block;
+    }
+    .item-sub {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge-DECLARADO_BAJA {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .badge-ALMACENADO_TEMPORAL {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .badge-SOLICITUD_RECOJO {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-EN_TRANSITO {
+      background: rgba(168, 85, 247, 0.15);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .badge-RECEPCIONADO_GESTORA {
+      background: rgba(6, 182, 212, 0.15);
+      color: #67e8f9;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .badge-EN_DESMANTELAMIENTO {
+      background: rgba(236, 72, 153, 0.15);
+      color: #f472b6;
+      border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+    .badge-DISPOSICION_FINAL {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .cat-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Action Buttons in Row */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .btn-icon.advance:hover {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .btn-icon.delete:hover {
+      background: rgba(244, 63, 94, 0.2);
+      color: #fb7185;
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    /* Stepper / Timeline in Details Modal */
+    .lifecycle-stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 28px 0;
+      padding: 0 10px;
+    }
+    .lifecycle-stepper::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
+    }
+    .step-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 14%;
+      text-align: center;
+    }
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #0f172a;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      transition: all 0.3s;
+    }
+    .step-item.completed .step-dot {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #032314;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+    }
+    .step-item.current .step-dot {
+      background: #0f172a;
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.6);
+      transform: scale(1.15);
+    }
+    .step-label {
+      font-size: 0.68rem;
+      margin-top: 8px;
+      color: var(--text-dim);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .step-item.completed .step-label,
+    .step-item.current .step-label {
+      color: var(--text-main);
+    }
+
+    /* Modal Backdrop */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.2);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s ease;
+      padding: 28px 32px;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: #fff; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      transition: all 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      padding: 12px 20px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      animation: slideIn 0.3s ease;
+    }
+    .toast.success { border-left: 4px solid var(--primary); }
+    .toast.error { border-left: 4px solid var(--rose); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-dim);
+    }
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="brand-group">
+      <div class="brand-icon">
+        <i class="fa-solid fa-recycle"></i>
+      </div>
+      <div>
+        <div class="brand-title">
+          EcoTechTrack
+          <span class="badge-utp">UTP 2026</span>
+        </div>
+        <div class="brand-subtitle">Plataforma Web para Trazabilidad de RAEE (Tema 4)</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <div class="api-status" id="apiStatusBadge">
+        <span class="api-pulse"></span>
+        <span>Spring Boot API Activo</span>
+      </div>
+
+      <a href="presentacion.html" target="_blank" class="btn btn-outline" id="btnOpenPresentation" title="Abrir diapositivas interactivas">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <span>Presentación</span>
+      </a>
+
+      <a href="/h2-console" target="_blank" class="btn btn-h2" id="btnH2Console" title="Consola H2 Database">
+        <i class="fa-solid fa-database"></i>
+        <span>H2 Console</span>
+      </a>
+
+      <button class="btn btn-primary" id="btnNewResiduo" onclick="openCreateModal()">
+        <i class="fa-solid fa-plus"></i>
+        <span>Declarar RAEE</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- KPI Metric Cards -->
+    <section class="metrics-grid" id="metricsGrid">
+      <div class="stat-card" style="--card-accent: var(--primary);">
+        <div class="stat-header">
+          <span class="stat-title">Total RAEE Registrados</span>
+          <div class="stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        </div>
+        <div class="stat-value" id="kpiTotal">0</div>
+        <div class="stat-desc">Dispositivos dados de baja en el sistema</div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--cyan);">
+        <div class="stat-header">
+          <span class="stat-title">Peso Acumulado</span>
+          <div class="stat-icon"><i class="fa-solid fa-weight-scale"></i></div>
+        </div>
+        <div class="stat-value" id="kpiPeso">0.0 <span style="font-size: 1.1rem; color: var(--text-muted);">kg</span></div>
+        <div class="stat-desc">Masa total de material tecnológico a tratar</div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--purple);">
+        <div class="stat-header">
+          <span class="stat-title">Cadena Activa</span>
+          <div class="stat-icon"><i class="fa-solid fa-truck-fast"></i></div>
+        </div>
+        <div class="stat-value" id="kpiActivos">0</div>
+        <div class="stat-desc">En almacén temporal o en tránsito logístico</div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--amber);">
+        <div class="stat-header">
+          <span class="stat-title">Tasa de Valorización</span>
+          <div class="stat-icon"><i class="fa-solid fa-leaf"></i></div>
+        </div>
+        <div class="stat-value" id="kpiTasa">0%</div>
+        <div class="stat-desc">Llegaron a gestora o disposición final</div>
+      </div>
+    </section>
+
+    <!-- Main Panel -->
+    <section class="dashboard-panel">
+      <div class="panel-header">
+        <div class="panel-title-area">
+          <h2><i class="fa-solid fa-list-check" style="color: var(--primary);"></i> Inventario y Trazabilidad en Tiempo Real</h2>
+          <p>Consulta, seguimiento de estado, y auditoría de Residuos Electrónicos con Spring Boot 3</p>
+        </div>
+
+        <button class="btn btn-outline" onclick="fetchResiduos()" title="Refrescar lista desde la API">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Actualizar</span>
+        </button>
+      </div>
+
+      <!-- Controls & Filters -->
+      <div class="controls-bar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por código (ej. RAEE-2026), modelo, serie o marca..." onkeyup="filterLocalData()">
+        </div>
+
+        <select class="filter-select" id="filterEstado" onchange="onFilterChange()">
+          <option value="">Todos los Estados</option>
+          <option value="DECLARADO_BAJA">DECLARADO_BAJA</option>
+          <option value="ALMACENADO_TEMPORAL">ALMACENADO_TEMPORAL</option>
+          <option value="SOLICITUD_RECOJO">SOLICITUD_RECOJO</option>
+          <option value="EN_TRANSITO">EN_TRANSITO</option>
+          <option value="RECEPCIONADO_GESTORA">RECEPCIONADO_GESTORA</option>
+          <option value="EN_DESMANTELAMIENTO">EN_DESMANTELAMIENTO</option>
+          <option value="DISPOSICION_FINAL">DISPOSICION_FINAL</option>
+        </select>
+
+        <select class="filter-select" id="filterCategoria" onchange="onFilterChange()">
+          <option value="">Todas las Categorías</option>
+          <option value="EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES">Informática y Telecomunicaciones</option>
+          <option value="APARATOS_ELECTRONICOS_DE_CONSUMO">Electrónicos de Consumo</option>
+          <option value="GRANDES_ELECTRODOMESTICOS">Grandes Electrodomésticos</option>
+          <option value="PEQUENOS_ELECTRODOMESTICOS">Pequeños Electrodomésticos</option>
+          <option value="BATERIAS_Y_ACUMULADORES">Baterías y Acumuladores</option>
+          <option value="HERRAMIENTAS_ELECTRICAS_Y_ELECTRONICAS">Herramientas Eléctricas</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-container">
+        <table id="residuosTable">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descripción y Equipo</th>
+              <th>Categoría RAEE</th>
+              <th>Peso</th>
+              <th>Estado de Trazabilidad</th>
+              <th>Ubicación / Gestora</th>
+              <th style="text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="residuosTableBody">
+            <!-- Renderizado dinámicamente con JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="emptyMessage" class="empty-state" style="display: none;">
+        <i class="fa-solid fa-folder-open"></i>
+        <h3>No se encontraron residuos registrados</h3>
+        <p>Utiliza el botón superior para declarar y dar de baja un nuevo equipo RAEE.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Crear / Editar Residuo -->
+  <div class="modal-overlay" id="residuoModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalFormTitle">
+          <i class="fa-solid fa-box-open" style="color: var(--primary);"></i>
+          <span>Declarar Nuevo Residuo RAEE</span>
+        </h3>
+        <button class="modal-close" onclick="closeModal('residuoModal')">&times;</button>
+      </div>
+
+      <form id="residuoForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="formResiduoId">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="formCodigo">Código Único RAEE *</label>
+            <input type="text" id="formCodigo" placeholder="ej. RAEE-2026-005" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formCategoria">Categoría Oficial *</label>
+            <select id="formCategoria" required>
+              <option value="EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES">Equipos Informática y Telecom.</option>
+              <option value="APARATOS_ELECTRONICOS_DE_CONSUMO">Aparatos de Consumo (Monitores, etc)</option>
+              <option value="GRANDES_ELECTRODOMESTICOS">Grandes Electrodomésticos</option>
+              <option value="PEQUENOS_ELECTRODOMESTICOS">Pequeños Electrodomésticos</option>
+              <option value="BATERIAS_Y_ACUMULADORES">Baterías y Acumuladores / UPS</option>
+              <option value="HERRAMIENTAS_ELECTRICAS_Y_ELECTRONICAS">Herramientas Eléctricas/Electr.</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="formDescripcion">Descripción Técnica del Residuo *</label>
+            <input type="text" id="formDescripcion" placeholder="ej. Servidor Dell PowerEdge R730 2U" maxlength="120" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formMarca">Marca *</label>
+            <input type="text" id="formMarca" placeholder="ej. Dell, HP, Lenovo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formModelo">Modelo *</label>
+            <input type="text" id="formModelo" placeholder="ej. PowerEdge R730" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formNumeroSerie">Número de Serie</label>
+            <input type="text" id="formNumeroSerie" placeholder="ej. CN-0J7456-1234">
+          </div>
+
+          <div class="form-group">
+            <label for="formPeso">Peso Estimado (kg) *</label>
+            <input type="number" id="formPeso" step="0.01" min="0.01" placeholder="ej. 18.50" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="formUbicacion">Ubicación Inicial Almacén *</label>
+            <input type="text" id="formUbicacion" placeholder="ej. Almacén Central TI - Estante 4B" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formEmpresaGestora">Empresa Gestora Asignada</label>
+            <input type="text" id="formEmpresaGestora" placeholder="ej. EcoGestores Perú S.A.C.">
+          </div>
+
+          <div class="form-group">
+            <label for="formEstado">Estado Inicial</label>
+            <select id="formEstado">
+              <option value="DECLARADO_BAJA">DECLARADO_BAJA</option>
+              <option value="ALMACENADO_TEMPORAL">ALMACENADO_TEMPORAL</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="formObservaciones">Observaciones Técnicas / Motivo de Baja</label>
+            <textarea id="formObservaciones" rows="2" placeholder="ej. Baja por obsolescencia tecnológica, componentes no operativos."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('residuoModal')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitForm">
+            <i class="fa-solid fa-save"></i>
+            <span>Guardar Residuo</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Ver Detalle y Trazabilidad -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-route" style="color: var(--cyan);"></i>
+          <span>Línea de Vida y Trazabilidad del Residuo</span>
+        </h3>
+        <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+      </div>
+
+      <div id="detailContent">
+        <!-- Renderizado dinámico -->
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" onclick="closeModal('detailModal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Avanzar Estado -->
+  <div class="modal-overlay" id="statusModal">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fa-solid fa-forward-step" style="color: var(--primary);"></i>
+          <span>Avanzar Estado en la Cadena</span>
+        </h3>
+        <button class="modal-close" onclick="closeModal('statusModal')">&times;</button>
+      </div>
+
+      <form id="statusForm" onsubmit="handleStatusSubmit(event)">
+        <input type="hidden" id="statusResiduoId">
+
+        <div style="margin-bottom: 16px;">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Residuo seleccionado:</p>
+          <div style="font-weight: 700; color: #fff;" id="statusItemSummary">-</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="statusNuevoEstado">Siguiente Estado *</label>
+          <select id="statusNuevoEstado" required>
+            <option value="DECLARADO_BAJA">1. DECLARADO_BAJA</option>
+            <option value="ALMACENADO_TEMPORAL">2. ALMACENADO_TEMPORAL</option>
+            <option value="SOLICITUD_RECOJO">3. SOLICITUD_RECOJO</option>
+            <option value="EN_TRANSITO">4. EN_TRANSITO</option>
+            <option value="RECEPCIONADO_GESTORA">5. RECEPCIONADO_GESTORA</option>
+            <option value="EN_DESMANTELAMIENTO">6. EN_DESMANTELAMIENTO</option>
+            <option value="DISPOSICION_FINAL">7. DISPOSICION_FINAL</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="statusEmpresaGestora">Empresa Gestora (Operador Autorizado)</label>
+          <input type="text" id="statusEmpresaGestora" placeholder="ej. EcoGestores Perú S.A.C.">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="statusObservaciones">Observaciones del Evento de Trazabilidad</label>
+          <textarea id="statusObservaciones" rows="2" placeholder="ej. Retirado por transportista con Guía de Remisión #4521"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('statusModal')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i>
+            <span>Actualizar Estado</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer>
+    EcoTechTrack &copy; 2026 – Universidad Tecnológica del Perú (UTP) | Arquitectura Spring Boot 3 + H2 + TDD
+  </footer>
+
+  <script>
+    const API_BASE = '/api/residuos';
+    const LIFECYCLE_STEPS = [
+      { key: 'DECLARADO_BAJA', label: '1. Declarado Baja', icon: 'fa-file-invoice' },
+      { key: 'ALMACENADO_TEMPORAL', label: '2. Acopio Temp.', icon: 'fa-warehouse' },
+      { key: 'SOLICITUD_RECOJO', label: '3. Solicitud Recojo', icon: 'fa-clipboard-check' },
+      { key: 'EN_TRANSITO', label: '4. En Tránsito', icon: 'fa-truck' },
+      { key: 'RECEPCIONADO_GESTORA', label: '5. Recibido Gestora', icon: 'fa-industry' },
+      { key: 'EN_DESMANTELAMIENTO', label: '6. Desmantelamiento', icon: 'fa-screwdriver-wrench' },
+      { key: 'DISPOSICION_FINAL', label: '7. Disposición Final', icon: 'fa-circle-check' }
+    ];
+
+    let cachedResiduos = [];
+
+    // Formateador de categorías legible
+    function formatCategoria(cat) {
+      const map = {
+        'EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES': 'Informática y Telecom.',
+        'APARATOS_ELECTRONICOS_DE_CONSUMO': 'Aparatos de Consumo',
+        'GRANDES_ELECTRODOMESTICOS': 'Grandes Electrodomésticos',
+        'PEQUENOS_ELECTRODOMESTICOS': 'Pequeños Electrodomésticos',
+        'BATERIAS_Y_ACUMULADORES': 'Baterías y Acumuladores',
+        'HERRAMIENTAS_ELECTRICAS_Y_ELECTRONICAS': 'Herramientas Eléctricas'
+      };
+      return map[cat] || cat;
+    }
+
+    // Cargar datos al iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchResiduos();
+    });
+
+    async function fetchResiduos() {
+      const estado = document.getElementById('filterEstado').value;
+      const categoria = document.getElementById('filterCategoria').value;
+
+      let url = API_BASE;
+      const params = new URLSearchParams();
+      if (estado) params.append('estado', estado);
+      if (categoria) params.append('categoria', categoria);
+      if (params.toString()) url += `?${params.toString()}`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+        const data = await res.json();
+        cachedResiduos = data;
+        renderTable(data);
+        updateKPIs(data);
+        document.getElementById('apiStatusBadge').innerHTML = `
+          <span class="api-pulse"></span>
+          <span>Spring Boot Conectado</span>
+        `;
+      } catch (err) {
+        console.error("Error al cargar residuos:", err);
+        showToast(`Error al conectar con la API: ${err.message}`, 'error');
+        document.getElementById('apiStatusBadge').innerHTML = `
+          <span class="api-pulse" style="background: #f43f5e; box-shadow: 0 0 8px #f43f5e;"></span>
+          <span style="color: #fb7185;">API Desconectada</span>
+        `;
+      }
+    }
+
+    function onFilterChange() {
+      fetchResiduos();
+    }
+
+    function filterLocalData() {
+      const term = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!term) {
+        renderTable(cachedResiduos);
+        return;
+      }
+      const filtered = cachedResiduos.filter(item => 
+        (item.codigoIdentificacion && item.codigoIdentificacion.toLowerCase().includes(term)) ||
+        (item.descripcion && item.descripcion.toLowerCase().includes(term)) ||
+        (item.marca && item.marca.toLowerCase().includes(term)) ||
+        (item.modelo && item.modelo.toLowerCase().includes(term)) ||
+        (item.numeroSerie && item.numeroSerie.toLowerCase().includes(term))
+      );
+      renderTable(filtered);
+    }
+
+    function updateKPIs(items) {
+      const total = items.length;
+      const totalPeso = items.reduce((sum, item) => sum + (item.pesoKg || 0), 0);
+      const enTransitoOAlmacen = items.filter(i => ['ALMACENADO_TEMPORAL', 'SOLICITUD_RECOJO', 'EN_TRANSITO'].includes(i.estado)).length;
+      const valorizados = items.filter(i => ['RECEPCIONADO_GESTORA', 'EN_DESMANTELAMIENTO', 'DISPOSICION_FINAL'].includes(i.estado)).length;
+      const tasa = total > 0 ? Math.round((valorizados / total) * 100) : 0;
+
+      document.getElementById('kpiTotal').textContent = total;
+      document.getElementById('kpiPeso').innerHTML = `${totalPeso.toFixed(1)} <span style="font-size: 1.1rem; color: var(--text-muted);">kg</span>`;
+      document.getElementById('kpiActivos').textContent = enTransitoOAlmacen;
+      document.getElementById('kpiTasa').textContent = `${tasa}%`;
+    }
+
+    function renderTable(items) {
+      const tbody = document.getElementById('residuosTableBody');
+      const emptyMsg = document.getElementById('emptyMessage');
+      tbody.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <span class="code-badge">${escapeHtml(item.codigoIdentificacion)}</span>
+          </td>
+          <td>
+            <span class="item-desc">${escapeHtml(item.descripcion)}</span>
+            <div class="item-sub">
+              <strong>${escapeHtml(item.marca)}</strong> ${escapeHtml(item.modelo)} 
+              ${item.numeroSerie ? `&bull; S/N: ${escapeHtml(item.numeroSerie)}` : ''}
+            </div>
+          </td>
+          <td>
+            <span class="cat-tag">${formatCategoria(item.categoria)}</span>
+          </td>
+          <td>
+            <strong style="color: #38bdf8;">${item.pesoKg.toFixed(2)}</strong> kg
+          </td>
+          <td>
+            <span class="badge badge-${item.estado}">
+              <i class="fa-solid fa-circle-dot" style="font-size: 0.55rem;"></i>
+              ${item.estado.replace(/_/g, ' ')}
+            </span>
+          </td>
+          <td>
+            <div style="font-size: 0.82rem; color: #e2e8f0;">${escapeHtml(item.ubicacionAlmacen)}</div>
+            <div style="font-size: 0.74rem; color: var(--text-dim);">${escapeHtml(item.empresaGestora || 'No asignada')}</div>
+          </td>
+          <td style="text-align: right;">
+            <div class="row-actions" style="justify-content: flex-end;">
+              <button class="btn-icon advance" onclick="openStatusModal(${item.id})" title="Avanzar Estado en la Cadena">
+                <i class="fa-solid fa-forward-step"></i>
+              </button>
+              <button class="btn-icon" onclick="openDetailModal(${item.id})" title="Ver Línea de Trazabilidad">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button class="btn-icon" onclick="openEditModal(${item.id})" title="Editar Datos">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="btn-icon delete" onclick="confirmDelete(${item.id}, '${escapeHtml(item.codigoIdentificacion)}')" title="Eliminar Residuo">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Modal Crear
+    function openCreateModal() {
+      document.getElementById('residuoForm').reset();
+      document.getElementById('formResiduoId').value = '';
+      document.getElementById('modalFormTitle').innerHTML = `
+        <i class="fa-solid fa-box-open" style="color: var(--primary);"></i>
+        <span>Declarar Nuevo Residuo RAEE</span>
+      `;
+      // Generar sugerencia de código
+      const nextNum = (cachedResiduos.length + 1).toString().padStart(3, '0');
+      document.getElementById('formCodigo').value = `RAEE-2026-${nextNum}`;
+      document.getElementById('formEstado').disabled = false;
+      openModal('residuoModal');
+    }
+
+    // Modal Editar
+    function openEditModal(id) {
+      const item = cachedResiduos.find(r => r.id === id);
+      if (!item) return;
+
+      document.getElementById('formResiduoId').value = item.id;
+      document.getElementById('formCodigo').value = item.codigoIdentificacion;
+      document.getElementById('formCategoria').value = item.categoria;
+      document.getElementById('formDescripcion').value = item.descripcion;
+      document.getElementById('formMarca').value = item.marca;
+      document.getElementById('formModelo').value = item.modelo;
+      document.getElementById('formNumeroSerie').value = item.numeroSerie || '';
+      document.getElementById('formPeso').value = item.pesoKg;
+      document.getElementById('formUbicacion').value = item.ubicacionAlmacen;
+      document.getElementById('formEmpresaGestora').value = item.empresaGestora || '';
+      document.getElementById('formEstado').value = item.estado;
+      document.getElementById('formEstado').disabled = true; // El estado se actualiza por endpoint PATCH
+      document.getElementById('formObservaciones').value = item.observaciones || '';
+
+      document.getElementById('modalFormTitle').innerHTML = `
+        <i class="fa-solid fa-pen-to-square" style="color: var(--cyan);"></i>
+        <span>Editar Residuo [${escapeHtml(item.codigoIdentificacion)}]</span>
+      `;
+      openModal('residuoModal');
+    }
+
+    // Guardar (POST o PUT)
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('formResiduoId').value;
+      const isEdit = Boolean(id);
+
+      const payload = {
+        codigoIdentificacion: document.getElementById('formCodigo').value.trim(),
+        categoria: document.getElementById('formCategoria').value,
+        descripcion: document.getElementById('formDescripcion').value.trim(),
+        marca: document.getElementById('formMarca').value.trim(),
+        modelo: document.getElementById('formModelo').value.trim(),
+        numeroSerie: document.getElementById('formNumeroSerie').value.trim() || null,
+        pesoKg: parseFloat(document.getElementById('formPeso').value),
+        ubicacionAlmacen: document.getElementById('formUbicacion').value.trim(),
+        empresaGestora: document.getElementById('formEmpresaGestora').value.trim() || null,
+        observaciones: document.getElementById('formObservaciones').value.trim() || null
+      };
+
+      if (!isEdit) {
+        payload.estado = document.getElementById('formEstado').value;
+      }
+
+      try {
+        const url = isEdit ? `${API_BASE}/${id}` : API_BASE;
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.mensaje || `Error HTTP ${res.status}`);
+        }
+
+        closeModal('residuoModal');
+        showToast(isEdit ? 'Residuo actualizado exitosamente' : 'Residuo declarado y registrado correctamente', 'success');
+        fetchResiduos();
+      } catch (err) {
+        showToast(`Error al guardar: ${err.message}`, 'error');
+      }
+    }
+
+    // Modal Avanzar Estado
+    function openStatusModal(id) {
+      const item = cachedResiduos.find(r => r.id === id);
+      if (!item) return;
+
+      document.getElementById('statusResiduoId').value = item.id;
+      document.getElementById('statusItemSummary').textContent = `${item.codigoIdentificacion} - ${item.descripcion} (${item.estado})`;
+      document.getElementById('statusEmpresaGestora').value = item.empresaGestora || '';
+      document.getElementById('statusObservaciones').value = '';
+
+      // Determinar el siguiente estado lógico
+      const currentIndex = LIFECYCLE_STEPS.findIndex(s => s.key === item.estado);
+      const nextStep = LIFECYCLE_STEPS[Math.min(currentIndex + 1, LIFECYCLE_STEPS.length - 1)];
+      document.getElementById('statusNuevoEstado').value = nextStep ? nextStep.key : item.estado;
+
+      openModal('statusModal');
+    }
+
+    async function handleStatusSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('statusResiduoId').value;
+      const nuevoEstado = document.getElementById('statusNuevoEstado').value;
+      const empresaGestora = document.getElementById('statusEmpresaGestora').value.trim() || null;
+      const observaciones = document.getElementById('statusObservaciones').value.trim() || null;
+
+      try {
+        const res = await fetch(`${API_BASE}/${id}/estado`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nuevoEstado: nuevoEstado,
+            empresaGestora: empresaGestora,
+            observaciones: observaciones
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.mensaje || `Error HTTP ${res.status}`);
+        }
+
+        closeModal('statusModal');
+        showToast(`Estado actualizado a: ${nuevoEstado}`, 'success');
+        fetchResiduos();
+      } catch (err) {
+        showToast(`Error: ${err.message}`, 'error');
+      }
+    }
+
+    // Modal Detalle & Trazabilidad
+    function openDetailModal(id) {
+      const item = cachedResiduos.find(r => r.id === id);
+      if (!item) return;
+
+      const currentIndex = LIFECYCLE_STEPS.findIndex(s => s.key === item.estado);
+
+      let stepperHtml = '<div class="lifecycle-stepper">';
+      LIFECYCLE_STEPS.forEach((step, idx) => {
+        let statusClass = '';
+        if (idx < currentIndex) statusClass = 'completed';
+        else if (idx === currentIndex) statusClass = 'current';
+
+        stepperHtml += `
+          <div class="step-item ${statusClass}">
+            <div class="step-dot">
+              <i class="fa-solid ${idx <= currentIndex ? step.icon : 'fa-circle'}"></i>
+            </div>
+            <div class="step-label">${step.label}</div>
+          </div>
+        `;
+      });
+      stepperHtml += '</div>';
+
+      const detailHtml = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+          <div>
+            <span class="code-badge" style="font-size: 1rem; padding: 6px 12px;">${escapeHtml(item.codigoIdentificacion)}</span>
+            <h2 style="font-size: 1.4rem; margin-top: 8px; color: #fff;">${escapeHtml(item.descripcion)}</h2>
+          </div>
+          <span class="badge badge-${item.estado}" style="font-size: 0.85rem; padding: 6px 14px;">
+            ${item.estado.replace(/_/g, ' ')}
+          </span>
+        </div>
+
+        ${stepperHtml}
+
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-top: 20px;">
+          <h4 style="color: var(--cyan); margin-bottom: 14px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            <i class="fa-solid fa-circle-info"></i> Ficha Técnica y Registro en Base de Datos
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; font-size: 0.88rem;">
+            <div><strong style="color: var(--text-dim);">Categoría:</strong> <br><span style="color: #fff;">${formatCategoria(item.categoria)}</span></div>
+            <div><strong style="color: var(--text-dim);">Peso Registrado:</strong> <br><span style="color: #38bdf8; font-weight: 700;">${item.pesoKg} kg</span></div>
+            <div><strong style="color: var(--text-dim);">Marca y Modelo:</strong> <br><span style="color: #fff;">${escapeHtml(item.marca)} ${escapeHtml(item.modelo)}</span></div>
+            <div><strong style="color: var(--text-dim);">Número de Serie:</strong> <br><span style="color: #cbd5e1;">${escapeHtml(item.numeroSerie || 'Sin serie')}</span></div>
+            <div><strong style="color: var(--text-dim);">Ubicación Almacén:</strong> <br><span style="color: #fff;">${escapeHtml(item.ubicacionAlmacen)}</span></div>
+            <div><strong style="color: var(--text-dim);">Empresa Gestora:</strong> <br><span style="color: #34d399;">${escapeHtml(item.empresaGestora || 'No asignada')}</span></div>
+            <div><strong style="color: var(--text-dim);">Fecha de Registro:</strong> <br><span style="color: #94a3b8;">${escapeHtml(item.fechaRegistro || 'N/A')}</span></div>
+            <div><strong style="color: var(--text-dim);">Última Actualización:</strong> <br><span style="color: #94a3b8;">${escapeHtml(item.fechaActualizacion || 'N/A')}</span></div>
+            <div style="grid-column: span 2;">
+              <strong style="color: var(--text-dim);">Observaciones Técnicas:</strong>
+              <p style="color: #e2e8f0; margin-top: 4px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 6px;">
+                ${escapeHtml(item.observaciones || 'Sin observaciones registradas.')}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('detailContent').innerHTML = detailHtml;
+      openModal('detailModal');
+    }
+
+    // Eliminar
+    async function confirmDelete(id, codigo) {
+      if (!confirm(`¿Estás seguro de eliminar el residuo con código ${codigo}?`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+        showToast(`Residuo [${codigo}] eliminado con éxito`, 'success');
+        fetchResiduos();
+      } catch (err) {
+        showToast(`Error al eliminar: ${err.message}`, 'error');
+      }
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Toast Helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icon = type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation';
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
