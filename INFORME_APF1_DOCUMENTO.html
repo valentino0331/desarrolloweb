@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe Avance de Proyecto Final 1 - EcoTechTrack (UTP)</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 15mm 15mm 15mm 15mm;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-size: 10.5pt;
+            line-height: 1.45;
+        }
+
+        .page {
+            width: 100%;
+            min-height: 267mm;
+            max-height: 267mm;
+            padding: 5mm;
+            background: #ffffff;
+            position: relative;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HEADER & FOOTER */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #b91c1c;
+            padding-bottom: 5px;
+            margin-bottom: 12px;
+            font-size: 8.5pt;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .page-header .univ {
+            color: #b91c1c;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .page-footer {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8.5pt;
+            color: #94a3b8;
+            margin-top: 10px;
+        }
+
+        .page-content {
+            flex-grow: 1;
+        }
+
+        /* TITULOS */
+        h1, h2, h3, h4 {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 13.5pt;
+            border-left: 4px solid #b91c1c;
+            padding-left: 8px;
+            margin: 10px 0 6px 0;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        h3 {
+            font-size: 11pt;
+            color: #b91c1c;
+            margin: 7px 0 4px 0;
+        }
+        p {
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+
+        /* PORTADA */
+        .portada {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            text-align: center;
+            padding: 15px 10px;
+        }
+        .portada-top {
+            border-bottom: 3px solid #b91c1c;
+            padding-bottom: 15px;
+        }
+        .utp-badge {
+            display: inline-block;
+            background: #b91c1c;
+            color: white;
+            font-size: 14pt;
+            font-weight: 800;
+            padding: 6px 20px;
+            border-radius: 4px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        .facultad {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+        }
+        .carrera {
+            font-size: 10.5pt;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .portada-center {
+            margin: 20px 0;
+        }
+        .curso-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 9pt;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid #cbd5e1;
+        }
+        .proyecto-titulo {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.25;
+            margin-bottom: 10px;
+        }
+        .proyecto-subtitulo {
+            font-size: 12pt;
+            color: #0284c7;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .avance-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
+            color: white;
+            font-size: 10.5pt;
+            font-weight: 700;
+            padding: 5px 16px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .portada-bottom {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-align: left;
+            font-size: 9.5pt;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 6px 12px;
+        }
+        .info-label {
+            font-weight: 700;
+            color: #475569;
+        }
+        .info-value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* TABLAS */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0 10px 0;
+            font-size: 8.5pt;
+        }
+        th {
+            background: #0f172a;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 5px 8px;
+            border: 1px solid #334155;
+        }
+        td {
+            padding: 4.5px 8px;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* TARJETAS Y CAJAS */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+        }
+        .card-header {
+            font-weight: 700;
+            font-size: 9pt;
+            color: #b91c1c;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border-left: 3px solid #0284c7;
+            padding: 6px 10px;
+            font-size: 8.5pt;
+            margin-bottom: 8px;
+            color: #0369a1;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* CODE BOX */
+        .code-box {
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: 'Consolas', monospace;
+            font-size: 7.5pt;
+            padding: 6px 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 6px;
+            line-height: 1.35;
+            white-space: pre-wrap;
+        }
+
+        /* GRID 2 COLUMNAS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 7.5pt;
+            font-weight: 700;
+        }
+        .badge-green { background: #dcfce7; color: #15803d; }
+        .badge-blue { background: #e0f2fe; color: #0369a1; }
+        .badge-amber { background: #fef3c7; color: #b45309; }
+        .badge-red { background: #fee2e2; color: #b91c1c; }
+
+        /* IMÁGENES / CAPTURAS */
+        .img-container {
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #000;
+            margin: 6px 0;
+            text-align: center;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            max-height: 155px;
+            object-fit: cover;
+            display: block;
+        }
+        .img-caption {
+            background: #f1f5f9;
+            padding: 3px 6px;
+            font-size: 7.5pt;
+            color: #64748b;
+            font-weight: 600;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PÁGINA 1: PORTADA OFICIAL ==================== -->
+    <div class="page">
+        <div class="portada">
+            <div class="portada-top">
+                <div class="utp-badge">UNIVERSIDAD TECNOLÓGICA DEL PERÚ</div>
+                <div class="facultad">Facultad de Ingeniería</div>
+                <div class="carrera">Carrera Profesional de Ingeniería de Sistemas e Informática</div>
+            </div>
+
+            <div class="portada-center">
+                <span class="curso-badge">CURSO: DESARROLLO WEB INTEGRADO (100000ST61)</span><br>
+                <span class="avance-tag">AVANCE DE PROYECTO FINAL 1 (APF1) – UNIDAD 1: API REST</span>
+                <h1 class="proyecto-titulo">EcoTechTrack</h1>
+                <h2 style="border:none; color:#0284c7; font-size:12.5pt; margin-top:0; text-transform:none;">
+                    Plataforma Web para la Gestión y Trazabilidad Integral de Residuos de Aparatos Eléctricos y Electrónicos (RAEE)
+                </h2>
+                <p style="text-align:center; font-size:9pt; color:#64748b; max-width: 580px; margin: 0 auto;">
+                    Implementación de una API RESTful backend robusta en Spring Boot 3 aplicando Inyección de Dependencias, 
+                    persistencia relacional JPA con entidades vinculadas, desarrollo guiado por pruebas (TDD) y control de versiones.
+                </p>
+            </div>
+
+            <div class="portada-bottom">
+                <div class="info-grid">
+                    <div class="info-label">Tema Asignado:</div>
+                    <div class="info-value">Tema 4 – Sistema de Gestión de Residuos Electrónicos (RAEE)</div>
+                    
+                    <div class="info-label">Integrantes:</div>
+                    <div class="info-value">Valentino Marcavillaca Huillca</div>
+
+                    <div class="info-label">Docente del Curso:</div>
+                    <div class="info-value">Ing. Docente de Desarrollo Web Integrado</div>
+
+                    <div class="info-label">Ciclo / Período:</div>
+                    <div class="info-value">2026 - Ciclo Regular</div>
+
+                    <div class="info-label">Fecha de Entrega:</div>
+                    <div class="info-value">10 de Setiembre de 2026</div>
+
+                    <div class="info-label">Repositorio GitHub:</div>
+                    <div class="info-value" style="color:#0284c7;">https://github.com/valentino0331/desarrolloweb.git</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 1 de 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 2: ACTIVIDAD 1 - DEFINICIÓN INICIAL ==================== -->
+    <div class="page">
+        <div class="page-header">
+            <span class="univ">UTP | DESARROLLO WEB INTEGRADO</span>
+            <span>EcoTechTrack – APF1: Definición Inicial</span>
+        </div>
+        <div class="page-content">
+            <h2>1. Definición Inicial del Sistema</h2>
+
+            <h3>1.1. Nombre del Proyecto y Justificación</h3>
+            <p>
+                <strong>EcoTechTrack</strong> es una solución web empresarial orientada a la trazabilidad y fiscalización del ciclo de vida 
+                de los <strong>Residuos de Aparatos Eléctricos y Electrónicos (RAEE)</strong>. En el Perú, conforme al 
+                <strong>D.S. N° 009-2019-MINAM</strong>, las entidades generadoras tienen la obligación legal y ambiental de garantizar 
+                que sus activos informáticos dados de baja sean entregados únicamente a Empresas Operadoras de Residuos Sólidos (EO-RS) 
+                autorizadas, evitando la contaminación por metales pesados (plomo, mercurio y cadmio) y asegurando su correcta valorización.
+            </p>
+
+            <div class="highlight-box">
+                <strong>Justificación Técnica y de Negocio:</strong> Resuelve la dispersión de información en hojas de cálculo manuales, 
+                elimina el riesgo de pérdida o tráfico ilegal de componentes informáticos obsoletos, y automatiza la auditoría de cada residuo 
+                desde su baja hasta su disposición final.
+            </div>
+
+            <h3>1.2. Alcance del Sistema en esta Primera Fase</h3>
+            <p>
+                En esta fase inicial (APF1), se implementa la <strong>API RESTful del backend</strong> con: (1) Catálogo y registro de equipos en desuso, 
+                (2) Gestión de Almacenes de acopio temporal, (3) Registro de Empresas Gestoras formalmente autorizadas, y (4) Trazabilidad inmutable 
+                de cambios de estado mediante la entidad <code>HistorialMovimiento</code>.
+            </p>
+
+            <h3>1.3. Usuarios del Sistema (Roles Esperados)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:28%;">Rol del Sistema</th>
+                        <th style="width:27%;">Perfil / Actor Real</th>
+                        <th style="width:45%;">Responsabilidades Principales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Administrador Ambiental</strong></td>
+                        <td>Jefe de TI / Resp. Ambiental</td>
+                        <td>Declara la baja técnica de equipos, aprueba solicitudes de recojo y consulta métricas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Encargado de Almacén</strong></td>
+                        <td>Custodio de Depósito</td>
+                        <td>Registra el ingreso físico al almacén temporal, pesa el lote y hace entrega al transportista.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Operador Empresa Gestora</strong></td>
+                        <td>Conductor / Técnico EO-RS</td>
+                        <td>Recepciona el residuo con guía de remisión, reporta traslado e informa la valorización/disposición.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auditor / Fiscalizador</strong></td>
+                        <td>OEFA / Auditor Interno</td>
+                        <td>Consulta la línea de tiempo inmutable, certifica actas de baja y verifica trazabilidad legal.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>1.4. Diagrama de las Entidades Principales del Modelo de Dominio</h3>
+            <div class="card" style="background:#f8fafc; text-align:center;">
+                <div style="font-family:'Consolas', monospace; font-size:7.5pt; text-align:left; color:#334155; line-height:1.35;">
+                    <strong>[EMPRESA_GESTORA]</strong> (1) &lt;======== (N) <strong>[RESIDUO_ELECTRONICO]</strong> (N) ========&gt; (1) <strong>[ALMACEN]</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|| (1)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\/ (N)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>[HISTORIAL_MOVIMIENTO]</strong>
+                </div>
+            </div>
+            <p style="font-size:8.5pt; color:#475569;">
+                <strong>Cardinalidad:</strong> Una <em>Empresa Gestora</em> atiende múltiples residuos (1:N); un <em>Almacén</em> custodia múltiples residuos (1:N); 
+                y cada <em>Residuo Electrónico</em> posee una colección cronológica de eventos de trazabilidad (1:N).
+            </p>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 2 de 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 3: ACTIVIDAD 2 - ESTRUCTURA SPRING BOOT ==================== -->
+    <div class="page">
+        <div class="page-header">
+            <span class="univ">UTP | DESARROLLO WEB INTEGRADO</span>
+            <span>EcoTechTrack – APF1: Estructura Base Spring Boot</span>
+        </div>
+        <div class="page-content">
+            <h2>2. Estructura Base del Proyecto Spring Boot</h2>
+
+            <h3>2.1. Configuración del Entorno y Dependencias (Maven pom.xml)</h3>
+            <p>
+                El proyecto fue generado tomando como base las directrices de la <strong>Sesión 1 y Sesión 2</strong> con 
+                <strong>Spring Initializr</strong>, configurado sobre <strong>Spring Boot 3.3.4</strong> y <strong>Java 21 LTS</strong>:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dependencia Maven</th>
+                        <th>Artefacto / Starter</th>
+                        <th>Propósito Técnico en EcoTechTrack</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Spring Web</strong></td>
+                        <td><code>spring-boot-starter-web</code></td>
+                        <td>Exposición de endpoints RESTful, mapeo de controladores y servidor Tomcat embebido.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spring Data JPA</strong></td>
+                        <td><code>spring-boot-starter-data-jpa</code></td>
+                        <td>ORM Hibernate, repositorios CRUD automáticos y mapeo relacional de entidades.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jakarta Validation</strong></td>
+                        <td><code>spring-boot-starter-validation</code></td>
+                        <td>Validación declarativa de atributos (<code>@NotBlank</code>, <code>@Positive</code>, <code>@Size</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>H2 Database</strong></td>
+                        <td><code>com.h2database:h2</code></td>
+                        <td>Motor SQL en memoria para pruebas ágiles y consola web (<code>/h2-console</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lombok</strong></td>
+                        <td><code>org.projectlombok:lombok</code></td>
+                        <td>Generación automática de Getters, Setters, Builders y constructores.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spring Boot Test</strong></td>
+                        <td><code>spring-boot-starter-test</code></td>
+                        <td>Suite para TDD con JUnit 5, Mockito y MockMvc para pruebas de capa web.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2.2. Arquitectura de Software en Capas Desacopladas</h3>
+            <p>
+                Se implementó el patrón arquitectónico en capas con <strong>Inyección de Dependencias por Constructor</strong> 
+                (buena práctica enseñada en la Sesión 2 para garantizar alta cohesión y bajo acoplamiento):
+            </p>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">📂 Paquetes de la Arquitectura</div>
+                    <ul style="font-size:8pt; padding-left:14px; line-height:1.45; color:#334155;">
+                        <li><code>controller/</code>: Controladores REST (<code>@RestController</code>, códigos HTTP).</li>
+                        <li><code>service/ & service/impl/</code>: Lógica de negocio y transacciones (<code>@Transactional</code>).</li>
+                        <li><code>repository/</code>: Interfaces JPA Repository con consultas derivadas.</li>
+                        <li><code>model/</code>: Clases entidad (<code>@Entity</code>, <code>@Table</code>) y Enums.</li>
+                        <li><code>dto/</code>: Request/Response DTOs desacoplados de la persistencia.</li>
+                        <li><code>exception/</code>: Manejo global centralizado con <code>@RestControllerAdvice</code>.</li>
+                        <li><code>config/</code>: Semillero automático con <code>CommandLineRunner</code>.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-header">🛡️ Manejo Centralizado de Excepciones</div>
+                    <p style="font-size:8pt; color:#475569; margin-bottom:4px;">
+                        Respuestas JSON estandarizadas ante errores HTTP 404 (Recurso no encontrado) y HTTP 400 (Errores de validación):
+                    </p>
+                    <div class="code-box">{
+  "timestamp": "2026-09-10T15:45:00",
+  "status": 400,
+  "error": "Bad Request",
+  "mensaje": "Error de validación de campos",
+  "erroresValidacion": {
+    "codigoIdentificacion": "El código es obligatorio"
+  }
+}</div>
+                </div>
+            </div>
+
+            <h3>2.3. Código Representativo: Inyección por Constructor</h3>
+            <div class="code-box">@RestController
+@RequestMapping("/api/residuos")
+@CrossOrigin(origins = "*")
+public class ResiduoController {
+    private final ResiduoService residuoService;
+
+    // Inyección de dependencias recomendada UTP (sin @Autowired en atributos)
+    public ResiduoController(ResiduoService residuoService) {
+        this.residuoService = residuoService;
+    }
+}</div>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 3 de 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 4: ACTIVIDAD 3 - MODELO DE DOMINIO ==================== -->
+    <div class="page">
+        <div class="page-header">
+            <span class="univ">UTP | DESARROLLO WEB INTEGRADO</span>
+            <span>EcoTechTrack – APF1: Modelo de Dominio y Relaciones JPA</span>
+        </div>
+        <div class="page-content">
+            <h2>3. Modelo de Dominio y Relaciones entre Entidades</h2>
+
+            <h3>3.1. Clases Java con Anotación @Entity y sus Atributos</h3>
+            <p>
+                El modelo de datos se diseñó cubriendo la totalidad de requerimientos del Tema 4 de la consigna oficial, 
+                implementando <strong>4 entidades JPA</strong> estructuradas:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:22%;">Entidad JPA</th>
+                        <th style="width:38%;">Atributos Representativos</th>
+                        <th style="width:40%;">Relaciones Implementadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ResiduoElectronico</strong><br><span class="badge badge-green">Entidad Principal</span></td>
+                        <td><code>id</code> (PK), <code>codigoIdentificacion</code> (UK), <code>descripcion</code>, <code>categoria</code> (Enum), <code>marca</code>, <code>modelo</code>, <code>numeroSerie</code>, <code>pesoKg</code>, <code>estado</code> (Enum), <code>observaciones</code>, <code>fechaRegistro</code>, <code>fechaActualizacion</code></td>
+                        <td>
+                            • <code>@ManyToOne</code> ➔ <code>Almacen</code><br>
+                            • <code>@ManyToOne</code> ➔ <code>EmpresaGestora</code><br>
+                            • <code>@OneToMany</code> ➔ <code>HistorialMovimiento</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>EmpresaGestora</strong><br><span class="badge badge-blue">Operador RAEE</span></td>
+                        <td><code>id</code> (PK), <code>ruc</code> (UK 11 dígitos), <code>razonSocial</code>, <code>registroAutorizacion</code> (MINAM), <code>email</code>, <code>telefono</code>, <code>direccion</code></td>
+                        <td>
+                            • <code>@OneToMany(mappedBy="empresaGestora")</code> ➔ Colección de residuos asignados para recojo.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Almacen</strong><br><span class="badge badge-amber">Custodia Temporal</span></td>
+                        <td><code>id</code> (PK), <code>codigo</code> (UK), <code>nombre</code>, <code>sede</code>, <code>direccion</code>, <code>capacidadKg</code>, <code>responsable</code></td>
+                        <td>
+                            • <code>@OneToMany(mappedBy="almacen")</code> ➔ Colección de residuos en custodia temporal en el depósito.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>HistorialMovimiento</strong><br><span class="badge badge-red">Trazabilidad/Auditoría</span></td>
+                        <td><code>id</code> (PK), <code>estadoAnterior</code>, <code>estadoNuevo</code>, <code>fechaMovimiento</code>, <code>responsable</code>, <code>observaciones</code></td>
+                        <td>
+                            • <code>@ManyToOne</code> ➔ <code>ResiduoElectronico</code> (clave foránea <code>residuo_id</code>).
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>3.2. Fragmento de Código: Relaciones en ResiduoElectronico.java</h3>
+            <div class="code-box">@Entity
+@Table(name = "residuos_electronicos")
+public class ResiduoElectronico {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "codigo_identificacion", nullable = false, unique = true, length = 50)
+    private String codigoIdentificacion;
+
+    // Relación Many-to-One con Almacén
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "almacen_id")
+    private Almacen almacen;
+
+    // Relación Many-to-One con Empresa Gestora RAEE
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_gestora_id")
+    private EmpresaGestora empresaGestora;
+
+    // Relación One-to-Many con el Historial de Auditoría
+    @OneToMany(mappedBy = "residuo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("fechaMovimiento DESC")
+    private List&lt;HistorialMovimiento&gt; historialMovimientos;
+}</div>
+
+            <h3>3.3. Ciclo de Vida y Estados de Trazabilidad del Residuo (Enum EstadoResiduo)</h3>
+            <p style="font-size:8.5pt; color:#475569;">
+                La máquina de estados implementada en EcoTechTrack garantiza el seguimiento estricto en cada punto de control:
+            </p>
+            <div style="display:flex; justify-content:space-between; font-size:7.5pt; font-weight:700; text-align:center; margin-top:4px;">
+                <div style="background:#f1f5f9; padding:4px 6px; border-radius:4px; border:1px solid #cbd5e1;">1. DECLARADO_BAJA</div>
+                ➔
+                <div style="background:#f1f5f9; padding:4px 6px; border-radius:4px; border:1px solid #cbd5e1;">2. ALMACENADO_TEMPORAL</div>
+                ➔
+                <div style="background:#f1f5f9; padding:4px 6px; border-radius:4px; border:1px solid #cbd5e1;">3. SOLICITUD_RECOJO</div>
+                ➔
+                <div style="background:#f1f5f9; padding:4px 6px; border-radius:4px; border:1px solid #cbd5e1;">4. EN_TRANSITO</div>
+                ➔
+                <div style="background:#f1f5f9; padding:4px 6px; border-radius:4px; border:1px solid #cbd5e1;">5. DISPOSICION_FINAL</div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 4 de 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 5: EVIDENCIAS TDD Y POSTMAN ==================== -->
+    <div class="page">
+        <div class="page-header">
+            <span class="univ">UTP | DESARROLLO WEB INTEGRADO</span>
+            <span>EcoTechTrack – APF1: Evidencias de Código y Pruebas</span>
+        </div>
+        <div class="page-content">
+            <h2>4. Evidencias de Código, Pruebas TDD y Endpoints REST</h2>
+
+            <h3>4.1. Ejecución Automatizada de Pruebas Unitarias TDD (Maven Surefire)</h3>
+            <p>
+                Siguiendo los lineamientos de la <strong>Sesión 3 (Test-Driven Development)</strong>, se implementó una suite de pruebas 
+                con <strong>JUnit 5</strong> y <strong>MockMvc</strong> que valida el comportamiento de los controladores REST:
+            </p>
+            <div class="code-box">[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.utp.ecotechtrack.controller.AlmacenControllerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running com.utp.ecotechtrack.controller.EmpresaGestoraControllerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running com.utp.ecotechtrack.controller.ResiduoControllerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] Results:
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS (Total time: 10.392 s)</div>
+
+            <h3>4.2. Evidencias de Consumo de Endpoints RESTful (Postman / HTTP Response)</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">📥 GET /api/residuos/1 (HTTP 200 OK)</div>
+                    <div class="code-box">{
+  "id": 1,
+  "codigoIdentificacion": "RAEE-2026-001",
+  "descripcion": "Servidor Torre HP ProLiant ML350 Gen9",
+  "categoria": "EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES",
+  "pesoKg": 32.4,
+  "estado": "DECLARADO_BAJA",
+  "ubicacionAlmacen": "Almacén General de TI (Sede Central)",
+  "almacen": {
+    "id": 1,
+    "codigo": "ALM-TI-01",
+    "nombre": "Almacén General de TI",
+    "sede": "Sede Central - Sótano 1"
+  },
+  "empresaGestora": "Pendiente de asignación"
+}</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">📤 POST /api/residuos (HTTP 201 Created)</div>
+                    <div class="code-box">{
+  "codigoIdentificacion": "RAEE-2026-005",
+  "descripcion": "Impresora Láser LaserJet Enterprise",
+  "categoria": "EQUIPOS_INFORMATICA_Y_TELECOMUNICACIONES",
+  "marca": "HP",
+  "modelo": "LaserJet M605",
+  "pesoKg": 21.3,
+  "almacenId": 1,
+  "empresaGestoraId": 1
+}
+--&gt; HTTP/1.1 201 Created
+--&gt; Location: /api/residuos/5
+--&gt; Estado inicial: DECLARADO_BAJA
+--&gt; Evento de trazabilidad registrado</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🕒 GET /api/residuos/2/historial (Trazabilidad y Auditoría de Movimientos)</div>
+                <div class="code-box">[
+  {
+    "id": 3,
+    "codigoResiduo": "RAEE-2026-002",
+    "estadoAnterior": "DECLARADO_BAJA",
+    "estadoNuevo": "ALMACENADO_TEMPORAL",
+    "fechaMovimiento": "2026-09-07 10:15:00",
+    "responsable": "Rosa Salazar (Almacén)",
+    "observaciones": "Custodia en Depósito Temporal B"
+  },
+  {
+    "id": 2,
+    "codigoResiduo": "RAEE-2026-002",
+    "estadoAnterior": null,
+    "estadoNuevo": "DECLARADO_BAJA",
+    "fechaMovimiento": "2026-09-06 09:00:00",
+    "responsable": "Rosa Salazar (Almacén)",
+    "observaciones": "Recepción inicial y pesaje"
+  }
+]</div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 5 de 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PÁGINA 6: EVIDENCIAS VISUALES Y CONCLUSIONES ==================== -->
+    <div class="page">
+        <div class="page-header">
+            <span class="univ">UTP | DESARROLLO WEB INTEGRADO</span>
+            <span>EcoTechTrack – APF1: Conclusiones y Entregables</span>
+        </div>
+        <div class="page-content">
+            <h2>5. Evidencias del Sistema en Ejecución y Conclusiones</h2>
+
+            <h3>5.1. Captura del Sistema en Ejecución (Dashboard y Consola H2)</h3>
+            <div class="grid-2">
+                <div class="img-container">
+                    <img src="docs/evidencias/captura_dashboard.png" alt="Dashboard EcoTechTrack">
+                    <div class="img-caption">Evidencia 1: Dashboard web interactivo de EcoTechTrack (Spring Boot Tomcat en puerto 8080)</div>
+                </div>
+                <div class="img-container">
+                    <img src="docs/evidencias/captura_presentacion.png" alt="Presentación Ejecutiva">
+                    <div class="img-caption">Evidencia 2: Presentación interactiva del proyecto integrada en el servidor local</div>
+                </div>
+            </div>
+
+            <h3>5.2. Conclusiones Iniciales del Avance 1</h3>
+            <div class="card" style="margin-bottom:8px;">
+                <ul style="font-size:8pt; padding-left:14px; line-height:1.45; color:#334155;">
+                    <li>
+                        <strong>Modelo de Dominio Relacional Sólido:</strong> Se logró el modelado completo de 4 entidades JPA 
+                        (<code>ResiduoElectronico</code>, <code>EmpresaGestora</code>, <code>Almacen</code> e <code>HistorialMovimiento</code>) con relaciones 
+                        <code>@ManyToOne</code> y <code>@OneToMany</code>, superando el estándar mínimo y garantizando trazabilidad real.
+                    </li>
+                    <li>
+                        <strong>Calidad del Software y TDD:</strong> La adopción de TDD permitió validar 11 casos de prueba unitaria antes de la entrega, 
+                        asegurando que cada controlador gestione adecuadamente códigos de estado HTTP (200, 201, 204, 400, 404).
+                    </li>
+                    <li>
+                        <strong>Arquitectura Desacoplada y Mantenible:</strong> La separación estricta mediante DTOs, interfaces de servicio e inyección 
+                        por constructor facilita la futura integración con el frontend de Angular en las siguientes unidades.
+                    </li>
+                </ul>
+            </div>
+
+            <h3>5.3. Control de Versiones y Repositorio de Código en GitHub</h3>
+            <div class="highlight-box" style="margin-bottom:6px;">
+                <strong>Repositorio Remoto Oficial:</strong> <a href="https://github.com/valentino0331/desarrolloweb.git" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:700;">https://github.com/valentino0331/desarrolloweb.git</a><br>
+                <strong>Rama Principal:</strong> <code>main</code> | <strong>Commit:</strong> <code>feat: implementacion completa APF1</code>
+            </div>
+
+            <h3>5.4. Proyección para el Avance 2 (Siguientes Pasos)</h3>
+            <p style="font-size:8.5pt; color:#475569;">
+                En el siguiente avance se implementará la interfaz gráfica cliente en <strong>Angular 17+</strong>, 
+                la seguridad perimetral basada en <strong>Spring Security con tokens JWT</strong> y la generación de reportes y actas de entrega de RAEE en formato PDF descargable.
+            </p>
+        </div>
+        <div class="page-footer">
+            <span>UTP – Avance de Proyecto Final 1</span>
+            <span>Página 6 de 6</span>
+        </div>
+    </div>
+
+</body>
+</html>
