@@ -1,0 +1,177 @@
+<div class="form-page">
+  <div class="card form-card">
+    <div class="card-header">
+      <h2>{{ isEditMode ? '✏️ Modificar Especificaciones de RAEE' : '➕ Declarar y Registrar Nuevo RAEE' }}</h2>
+      <a routerLink="/residuos" class="btn btn-secondary btn-sm">← Volver al Inventario</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="residuoForm" (ngSubmit)="onSubmit()" class="form-content">
+      <div class="form-row grid-2">
+        <div class="form-group">
+          <label for="codigoIdentificacion">Código de Identificación RAEE *</label>
+          <input
+            id="codigoIdentificacion"
+            type="text"
+            formControlName="codigoIdentificacion"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('codigoIdentificacion')?.invalid && residuoForm.get('codigoIdentificacion')?.touched"
+            placeholder="ej: RAEE-2026-005"
+          />
+          <div *ngIf="residuoForm.get('codigoIdentificacion')?.invalid && residuoForm.get('codigoIdentificacion')?.touched" class="error-feedback">
+            El código es obligatorio (mínimo 5 caracteres).
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoría RAEE (Directiva MINAM) *</label>
+          <select
+            id="categoria"
+            formControlName="categoria"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('categoria')?.invalid && residuoForm.get('categoria')?.touched"
+          >
+            <option value="" disabled>Seleccione categoría...</option>
+            <option *ngFor="let cat of categorias" [value]="cat">
+              {{ formatearTexto(cat) }}
+            </option>
+          </select>
+          <div *ngIf="residuoForm.get('categoria')?.invalid && residuoForm.get('categoria')?.touched" class="error-feedback">
+            La categoría ambiental es obligatoria.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción Detallada del Equipo *</label>
+        <input
+          id="descripcion"
+          type="text"
+          formControlName="descripcion"
+          class="form-control"
+          [class.is-invalid]="residuoForm.get('descripcion')?.invalid && residuoForm.get('descripcion')?.touched"
+          placeholder="ej: Servidor Rack Dell PowerEdge R640 fuera de garantía"
+        />
+        <div *ngIf="residuoForm.get('descripcion')?.invalid && residuoForm.get('descripcion')?.touched" class="error-feedback">
+          La descripción es requerida (mínimo 5 caracteres).
+        </div>
+      </div>
+
+      <div class="form-row grid-3">
+        <div class="form-group">
+          <label for="marca">Marca *</label>
+          <input
+            id="marca"
+            type="text"
+            formControlName="marca"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('marca')?.invalid && residuoForm.get('marca')?.touched"
+            placeholder="ej: Dell, HP, Lenovo"
+          />
+          <div *ngIf="residuoForm.get('marca')?.invalid && residuoForm.get('marca')?.touched" class="error-feedback">
+            La marca es requerida.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="modelo">Modelo *</label>
+          <input
+            id="modelo"
+            type="text"
+            formControlName="modelo"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('modelo')?.invalid && residuoForm.get('modelo')?.touched"
+            placeholder="ej: PowerEdge R640"
+          />
+          <div *ngIf="residuoForm.get('modelo')?.invalid && residuoForm.get('modelo')?.touched" class="error-feedback">
+            El modelo es requerido.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="numeroSerie">Número de Serie (S/N) *</label>
+          <input
+            id="numeroSerie"
+            type="text"
+            formControlName="numeroSerie"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('numeroSerie')?.invalid && residuoForm.get('numeroSerie')?.touched"
+            placeholder="ej: 7X89Q12"
+          />
+          <div *ngIf="residuoForm.get('numeroSerie')?.invalid && residuoForm.get('numeroSerie')?.touched" class="error-feedback">
+            El número de serie es obligatorio.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row grid-3">
+        <div class="form-group">
+          <label for="pesoKg">Peso Estimado (kg) *</label>
+          <input
+            id="pesoKg"
+            type="number"
+            step="0.01"
+            formControlName="pesoKg"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('pesoKg')?.invalid && residuoForm.get('pesoKg')?.touched"
+            placeholder="ej: 14.5"
+          />
+          <div *ngIf="residuoForm.get('pesoKg')?.invalid && residuoForm.get('pesoKg')?.touched" class="error-feedback">
+            El peso debe ser un número positivo (mínimo 0.01 kg).
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="almacenId">Almacén de Acopio Temporal *</label>
+          <select
+            id="almacenId"
+            formControlName="almacenId"
+            class="form-control"
+            [class.is-invalid]="residuoForm.get('almacenId')?.invalid && residuoForm.get('almacenId')?.touched"
+          >
+            <option [ngValue]="null" disabled>Seleccione almacén...</option>
+            <option *ngFor="let alm of almacenes" [value]="alm.id">
+              {{ alm.nombre }} ({{ alm.sede }})
+            </option>
+          </select>
+          <div *ngIf="residuoForm.get('almacenId')?.invalid && residuoForm.get('almacenId')?.touched" class="error-feedback">
+            Debe asignar un almacén de custodia temporal.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="empresaGestoraId">Operador / Gestor MINAM</label>
+          <select id="empresaGestoraId" formControlName="empresaGestoraId" class="form-control">
+            <option [ngValue]="null">Pendiente de asignación</option>
+            <option *ngFor="let emp of empresas" [value]="emp.id">
+              {{ emp.razonSocial }}
+            </option>
+          </select>
+          <span class="hint-text">Opcional en fase inicial</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="observaciones">Observaciones Técnicas del Descarte</label>
+        <textarea
+          id="observaciones"
+          rows="3"
+          formControlName="observaciones"
+          class="form-control"
+          placeholder="Estado físico, componentes faltantes o motivo técnico de la baja..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/residuos" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          <span *ngIf="isLoading">Procesando petición REST...</span>
+          <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar Especificaciones' : 'Guardar y Declarar Baja' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

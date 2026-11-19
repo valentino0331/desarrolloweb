@@ -1,0 +1,152 @@
+.residuos-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .page-title {
+    font-size: 1.6rem;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+  }
+
+  .page-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+}
+
+.filters-card {
+  padding: 1.25rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr auto;
+  gap: 1rem;
+  align-items: flex-end;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.dates-filter-panel {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border-color);
+
+  .date-inputs {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    .form-group {
+      margin-bottom: 0;
+      label {
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.code-badge {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--primary);
+  background-color: var(--primary-light);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.desc-cell {
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+
+  .desc-main {
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .desc-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+}
+
+.category-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.storage-text, .operator-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.actions-cell {
+  white-space: nowrap;
+  display: flex;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.info-box {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+
+  p {
+    margin-bottom: 0.25rem;
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
+.loading-state, .empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}

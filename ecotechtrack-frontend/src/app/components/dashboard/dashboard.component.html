@@ -1,0 +1,132 @@
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <div>
+      <h1 class="page-title">Panel de Control y Trazabilidad RAEE</h1>
+      <p class="page-subtitle">
+        Monitoreo en tiempo real de residuos electrónicos según normatividad ambiental MINAM
+      </p>
+    </div>
+    <div class="header-actions" *ngIf="authService.isOperador()">
+      <a routerLink="/residuos/nuevo" class="btn btn-primary">
+        ➕ Declarar Nuevo RAEE
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Métricas KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card card">
+      <div class="kpi-icon icon-green">📦</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Total RAEE Registrados</span>
+        <span class="kpi-value">{{ totalResiduos }}</span>
+        <span class="kpi-detail">Aparatos bajo seguimiento</span>
+      </div>
+    </div>
+
+    <div class="kpi-card card">
+      <div class="kpi-icon icon-blue">⚖️</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Peso Acumulado</span>
+        <span class="kpi-value">{{ totalPesoKg }} <small>kg</small></span>
+        <span class="kpi-detail">Masa total de residuos</span>
+      </div>
+    </div>
+
+    <div class="kpi-card card">
+      <div class="kpi-icon icon-amber">🏢</div>
+      <div class="kpi-content">
+        <span class="kpi-label">En Custodia Temporal</span>
+        <span class="kpi-value">{{ enAlmacen }}</span>
+        <span class="kpi-detail">En depósitos autorizados</span>
+      </div>
+    </div>
+
+    <div class="kpi-card card">
+      <div class="kpi-icon icon-purple">🚛</div>
+      <div class="kpi-content">
+        <span class="kpi-label">En Tránsito / Gestor</span>
+        <span class="kpi-value">{{ enTransitoOGestor }}</span>
+        <span class="kpi-detail">Camino a valorización</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal: Gráficos / Estadísticas JPQL y Residuos Recientes -->
+  <div class="dashboard-grid">
+    <!-- Columna Izquierda: Distribución por Estado (JPQL Aggregates) -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Distribución por Fase del Ciclo de Vida (JPQL)</h2>
+        <span class="badge badge-user">Métricas Agregadas</span>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-state">
+        Cargando datos agregados...
+      </div>
+
+      <div *ngIf="!isLoading && estadisticas.length === 0" class="empty-state">
+        No hay registros aún para calcular estadísticas.
+      </div>
+
+      <div *ngIf="!isLoading && estadisticas.length > 0" class="stats-list">
+        <div *ngFor="let stat of estadisticas" class="stat-item">
+          <div class="stat-header">
+            <span class="badge" [ngClass]="getEstadoClass(stat.estado)">
+              {{ formatearEstado(stat.estado) }}
+            </span>
+            <span class="stat-numbers">
+              <strong>{{ stat.cantidad }} u.</strong> • {{ stat.pesoTotalKg }} kg
+            </span>
+          </div>
+          <div class="progress-bar-bg">
+            <div
+              class="progress-bar-fill"
+              [style.width.%]="totalResiduos > 0 ? (stat.cantidad / totalResiduos) * 100 : 0"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha: Acciones Rápidas y Residuos Recientes -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Residuos Registrados Recientemente</h2>
+        <a routerLink="/residuos" class="btn btn-secondary btn-sm">Ver Todo ➔</a>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-state">
+        Cargando inventario...
+      </div>
+
+      <div *ngIf="!isLoading && residuosRecientes.length === 0" class="empty-state">
+        No se encontraron residuos registrados.
+      </div>
+
+      <div *ngIf="!isLoading && residuosRecientes.length > 0" class="recent-list">
+        <div *ngFor="let residuo of residuosRecientes" class="recent-item">
+          <div class="item-left">
+            <span class="item-code">{{ residuo.codigoIdentificacion }}</span>
+            <span class="item-desc">{{ residuo.descripcion }}</span>
+            <span class="item-meta">
+              {{ residuo.marca }} {{ residuo.modelo }} • {{ residuo.pesoKg }} kg
+            </span>
+          </div>
+          <div class="item-right">
+            <span class="badge" [ngClass]="getEstadoClass(residuo.estado)">
+              {{ formatearEstado(residuo.estado) }}
+            </span>
+            <a [routerLink]="['/residuos', residuo.id]" class="btn btn-secondary btn-sm">
+              Detalle
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

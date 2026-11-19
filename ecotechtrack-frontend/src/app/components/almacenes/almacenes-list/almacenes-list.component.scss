@@ -1,0 +1,37 @@
+.almacenes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.almacenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.almacen-card {
+  .alm-code {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--secondary);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .alm-name {
+    font-size: 1.15rem;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .alm-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    margin-top: 0.75rem;
+  }
+}

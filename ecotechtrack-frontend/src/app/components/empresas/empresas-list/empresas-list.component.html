@@ -1,0 +1,95 @@
+<div class="empresas-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Empresas Operadoras y Gestoras de RAEE (EO-RS)</h1>
+      <p class="page-subtitle">Operadores formales autorizados por el MINAM para recojo, transporte y valorización ecológica</p>
+    </div>
+    <button *ngIf="authService.isAdmin()" (click)="mostrarModal = true" class="btn btn-primary">
+      ➕ Registrar Operador (ADMIN)
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    Cargando directorio de empresas operadoras...
+  </div>
+
+  <div *ngIf="!isLoading && empresas.length === 0" class="empty-state">
+    No hay empresas gestoras registradas.
+  </div>
+
+  <div *ngIf="!isLoading && empresas.length > 0" class="empresas-grid">
+    <div *ngFor="let emp of empresas" class="card empresa-card card-hover">
+      <div class="card-header">
+        <div>
+          <span class="emp-ruc">RUC: {{ emp.ruc }}</span>
+          <h3 class="emp-name">{{ emp.razonSocial }}</h3>
+        </div>
+        <span class="badge badge-valorizado">MINAM Vigente</span>
+      </div>
+
+      <div class="emp-details">
+        <p><strong>📜 Autorización:</strong> {{ emp.registroAutorizacion }}</p>
+        <p *ngIf="emp.email"><strong>✉️ Correo:</strong> {{ emp.email }}</p>
+        <p *ngIf="emp.telefono"><strong>📞 Teléfono:</strong> {{ emp.telefono }}</p>
+        <p *ngIf="emp.direccion"><strong>📍 Planta:</strong> {{ emp.direccion }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Registrar Nueva Empresa (Solo ADMIN) -->
+<div *ngIf="mostrarModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3>Registrar Empresa Gestora de RAEE</h3>
+      <button (click)="mostrarModal = false" class="btn-close">&times;</button>
+    </div>
+
+    <form [formGroup]="empresaForm" (ngSubmit)="guardarEmpresa()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="ruc">Número de RUC (11 dígitos) *</label>
+          <input id="ruc" type="text" formControlName="ruc" class="form-control" placeholder="ej: 20601234567" />
+        </div>
+
+        <div class="form-group">
+          <label for="razonSocial">Razón Social *</label>
+          <input id="razonSocial" type="text" formControlName="razonSocial" class="form-control" placeholder="ej: EcoGestores del Perú S.A.C." />
+        </div>
+
+        <div class="form-group">
+          <label for="registroAutorizacion">Código de Autorización MINAM *</label>
+          <input id="registroAutorizacion" type="text" formControlName="registroAutorizacion" class="form-control" placeholder="ej: EO-RS-0045-2022-MINAM" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo de Operaciones</label>
+          <input id="email" type="email" formControlName="email" class="form-control" placeholder="ej: contacto@ecogestores.pe" />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono / Central</label>
+          <input id="telefono" type="text" formControlName="telefono" class="form-control" placeholder="ej: +51 1 450-9820" />
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Dirección Legal / Planta de Tratamiento</label>
+          <input id="direccion" type="text" formControlName="direccion" class="form-control" placeholder="ej: Av. Materiales 2450, Cercado de Lima" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" (click)="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Empresa</button>
+      </div>
+    </form>
+  </div>
+</div>

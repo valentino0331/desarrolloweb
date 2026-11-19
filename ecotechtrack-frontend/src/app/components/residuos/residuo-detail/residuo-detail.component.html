@@ -1,0 +1,117 @@
+<div class="detail-page" *ngIf="residuo">
+  <div class="page-header">
+    <div>
+      <span class="code-title">{{ residuo.codigoIdentificacion }}</span>
+      <h1 class="page-title">{{ residuo.descripcion }}</h1>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/residuos" class="btn btn-secondary">← Volver al Listado</a>
+      <a
+        *ngIf="authService.isOperador()"
+        [routerLink]="['/residuos', residuo.id, 'editar']"
+        class="btn btn-primary"
+      >
+        ✏️ Editar Especificaciones
+      </a>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+    <!-- Ficha Técnica -->
+    <div class="card info-card">
+      <div class="card-header">
+        <h2>📋 Ficha Técnica y Custodia</h2>
+        <span class="badge" [ngClass]="getEstadoClass(residuo.estado)">
+          {{ formatearTexto(residuo.estado) }}
+        </span>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item">
+          <span class="spec-label">Categoría Ambiental</span>
+          <span class="spec-value">{{ formatearTexto(residuo.categoria) }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Marca y Fabricante</span>
+          <span class="spec-value">{{ residuo.marca }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Modelo</span>
+          <span class="spec-value">{{ residuo.modelo }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Número de Serie (S/N)</span>
+          <span class="spec-value monospace">{{ residuo.numeroSerie }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Peso Registrado</span>
+          <span class="spec-value highlight">{{ residuo.pesoKg }} kg</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Almacén de Depósito</span>
+          <span class="spec-value">{{ residuo.ubicacionAlmacen }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Empresa Operadora MINAM</span>
+          <span class="spec-value">{{ residuo.empresaGestora || 'Pendiente de asignación' }}</span>
+        </div>
+
+        <div class="spec-item">
+          <span class="spec-label">Fecha de Declaración de Baja</span>
+          <span class="spec-value">{{ residuo.fechaRegistro }}</span>
+        </div>
+      </div>
+
+      <div class="notes-box" *ngIf="residuo.observaciones">
+        <h4>Observaciones Técnicas Registradas:</h4>
+        <p>{{ residuo.observaciones }}</p>
+      </div>
+    </div>
+
+    <!-- Línea de Tiempo de Auditoría y Trazabilidad -->
+    <div class="card timeline-card">
+      <div class="card-header">
+        <h2>⏱️ Cadena de Custodia (Trazabilidad)</h2>
+        <span class="badge badge-user">{{ historial.length }} Eventos</span>
+      </div>
+
+      <div *ngIf="historial.length === 0" class="empty-timeline">
+        No hay movimientos históricos registrados para este residuo.
+      </div>
+
+      <div class="timeline" *ngIf="historial.length > 0">
+        <div *ngFor="let evento of historial" class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="event-header">
+              <span class="badge" [ngClass]="getEstadoClass(evento.estadoNuevo)">
+                {{ formatearTexto(evento.estadoNuevo) }}
+              </span>
+              <span class="event-date">{{ evento.fechaMovimiento }}</span>
+            </div>
+            <div class="event-meta">
+              <strong>Responsable:</strong> {{ evento.responsable }}
+            </div>
+            <p class="event-desc" *ngIf="evento.observaciones">
+              {{ evento.observaciones }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loading-full">
+  Cargando detalle del residuo electrónico...
+</div>
+
+<div *ngIf="!isLoading && !residuo" class="alert alert-danger text-center">
+  {{ errorMessage || 'No se pudo cargar la información del residuo.' }}
+</div>

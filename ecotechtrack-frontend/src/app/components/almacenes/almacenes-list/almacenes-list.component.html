@@ -1,0 +1,89 @@
+<div class="almacenes-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Almacenes y Depósitos de Acopio Temporal</h1>
+      <p class="page-subtitle">Puntos de acopio autorizados para la custodia física de RAEE dados de baja</p>
+    </div>
+    <button *ngIf="authService.isAdmin()" (click)="mostrarModal = true" class="btn btn-primary">
+      ➕ Registrar Almacén (ADMIN)
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    Cargando infraestructura de almacenes...
+  </div>
+
+  <div *ngIf="!isLoading && almacenes.length === 0" class="empty-state">
+    No hay almacenes registrados en el sistema.
+  </div>
+
+  <div *ngIf="!isLoading && almacenes.length > 0" class="almacenes-grid">
+    <div *ngFor="let alm of almacenes" class="card almacen-card card-hover">
+      <div class="card-header">
+        <div>
+          <span class="alm-code">{{ alm.codigo }}</span>
+          <h3 class="alm-name">{{ alm.nombre }}</h3>
+        </div>
+        <span class="badge badge-almacen">Capacidad: {{ alm.capacidadKg }} kg</span>
+      </div>
+
+      <div class="alm-details">
+        <p><strong>📍 Sede:</strong> {{ alm.sede }}</p>
+        <p *ngIf="alm.direccion"><strong>Dirección:</strong> {{ alm.direccion }}</p>
+        <p><strong>👤 Custodio Responsable:</strong> {{ alm.responsable || 'No asignado' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Registrar Nuevo Almacén (Solo ADMIN) -->
+<div *ngIf="mostrarModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3>Registrar Nuevo Almacén de Acopio</h3>
+      <button (click)="mostrarModal = false" class="btn-close">&times;</button>
+    </div>
+
+    <form [formGroup]="almacenForm" (ngSubmit)="guardarAlmacen()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="codigo">Código Único de Almacén *</label>
+          <input id="codigo" type="text" formControlName="codigo" class="form-control" placeholder="ej: ALM-SUR-04" />
+        </div>
+
+        <div class="form-group">
+          <label for="nombre">Nombre Descriptivo *</label>
+          <input id="nombre" type="text" formControlName="nombre" class="form-control" placeholder="ej: Depósito Central Sede Sur" />
+        </div>
+
+        <div class="form-group">
+          <label for="sede">Sede / Campus *</label>
+          <input id="sede" type="text" formControlName="sede" class="form-control" placeholder="ej: Campus Villa El Salvador" />
+        </div>
+
+        <div class="form-group">
+          <label for="capacidadKg">Capacidad Máxima en Kilogramos (kg) *</label>
+          <input id="capacidadKg" type="number" formControlName="capacidadKg" class="form-control" placeholder="ej: 2500" />
+        </div>
+
+        <div class="form-group">
+          <label for="responsable">Responsable de Almacén *</label>
+          <input id="responsable" type="text" formControlName="responsable" class="form-control" placeholder="ej: Lic. Carlos Mendoza" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" (click)="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Almacén</button>
+      </div>
+    </form>
+  </div>
+</div>

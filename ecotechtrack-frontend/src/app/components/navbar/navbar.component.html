@@ -1,0 +1,59 @@
+<header class="navbar-wrapper">
+  <div class="navbar-container">
+    <a routerLink="/dashboard" class="brand">
+      <span class="brand-icon">🌱</span>
+      <div class="brand-text">
+        <span class="brand-title">EcoTechTrack</span>
+        <span class="brand-sub">Trazabilidad RAEE • UTP</span>
+      </div>
+    </a>
+
+    <nav class="nav-links" *ngIf="authService.isAuthenticated()">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        📊 Dashboard
+      </a>
+      <a routerLink="/residuos" routerLinkActive="active" class="nav-link">
+        📦 Residuos RAEE
+      </a>
+      <a routerLink="/almacenes" routerLinkActive="active" class="nav-link">
+        🏢 Almacenes
+      </a>
+      <a routerLink="/empresas" routerLinkActive="active" class="nav-link">
+        🚛 Operadores MINAM
+      </a>
+    </nav>
+
+    <div class="user-actions">
+      <ng-container *ngIf="authService.currentUserSignal() as user; else anonView">
+        <div class="user-pill">
+          <div class="user-avatar">
+            {{ user.nombreCompleto.charAt(0) }}
+          </div>
+          <div class="user-info">
+            <span class="user-name">{{ user.nombreCompleto }}</span>
+            <div class="user-roles">
+              <span *ngFor="let rol of user.roles" class="badge" [ngClass]="{
+                'badge-admin': rol === 'ROLE_ADMIN',
+                'badge-operador': rol === 'ROLE_OPERADOR',
+                'badge-user': rol === 'ROLE_USER'
+              }">
+                {{ rol.replace('ROLE_', '') }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button (click)="logout()" class="btn btn-secondary btn-sm btn-logout" title="Cerrar sesión">
+          🚪 Salir
+        </button>
+      </ng-container>
+
+      <ng-template #anonView>
+        <div class="auth-buttons">
+          <a routerLink="/login" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
+          <a routerLink="/register" class="btn btn-primary btn-sm">Registrarse</a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</header>
