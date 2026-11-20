@@ -14,6 +14,13 @@ export class NavbarComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
+  getHighestRole(roles?: string[]): { label: string; class: string } {
+    if (!roles || roles.length === 0) return { label: 'Usuario', class: 'role-user' };
+    if (roles.includes('ROLE_ADMIN')) return { label: 'Administrador', class: 'role-admin' };
+    if (roles.includes('ROLE_OPERADOR')) return { label: 'Operador RAEE', class: 'role-operador' };
+    return { label: 'Usuario', class: 'role-user' };
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

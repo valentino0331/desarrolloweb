@@ -6,7 +6,7 @@
       </div>
       <div class="brand-text">
         <span class="brand-title">EcoTechTrack</span>
-        <span class="brand-sub">Trazabilidad RAEE • UTP</span>
+        <span class="brand-sub">Trazabilidad RAEE</span>
       </div>
     </a>
 
@@ -31,25 +31,19 @@
 
     <div class="user-actions">
       <ng-container *ngIf="authService.currentUserSignal() as user; else anonView">
-        <div class="user-pill">
-          <div class="user-avatar">
-            {{ user.nombreCompleto.charAt(0) }}
+        <div class="user-profile">
+          <div class="user-avatar" [title]="user.nombreCompleto">
+            {{ user.nombreCompleto.charAt(0).toUpperCase() }}
           </div>
-          <div class="user-info">
+          <div class="user-details">
             <span class="user-name">{{ user.nombreCompleto }}</span>
-            <div class="user-roles">
-              <span *ngFor="let rol of user.roles" class="badge" [ngClass]="{
-                'badge-admin': rol === 'ROLE_ADMIN',
-                'badge-operador': rol === 'ROLE_OPERADOR',
-                'badge-user': rol === 'ROLE_USER'
-              }">
-                {{ rol.replace('ROLE_', '') }}
-              </span>
-            </div>
+            <span class="role-badge" [ngClass]="getHighestRole(user.roles).class">
+              {{ getHighestRole(user.roles).label }}
+            </span>
           </div>
         </div>
 
-        <button (click)="logout()" class="btn btn-secondary btn-sm btn-logout" title="Cerrar sesión">
+        <button (click)="logout()" class="btn-logout" title="Cerrar sesión">
           <i class="bi bi-box-arrow-right"></i>
           <span>Salir</span>
         </button>
@@ -59,11 +53,11 @@
         <div class="auth-buttons">
           <a routerLink="/login" class="btn btn-secondary btn-sm">
             <i class="bi bi-box-arrow-in-right"></i>
-            Iniciar Sesión
+            <span>Iniciar Sesión</span>
           </a>
           <a routerLink="/register" class="btn btn-primary btn-sm">
             <i class="bi bi-person-plus"></i>
-            Registrarse
+            <span>Registrarse</span>
           </a>
         </div>
       </ng-template>

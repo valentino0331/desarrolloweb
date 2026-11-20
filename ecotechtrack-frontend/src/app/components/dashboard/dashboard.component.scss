@@ -1,7 +1,7 @@
 .dashboard-page {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
 }
 
 .dashboard-header {
@@ -9,32 +9,36 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
 
   .page-title {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
+    font-weight: 800;
     color: #0f172a;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
   }
 
   .page-subtitle {
-    font-size: 0.875rem;
+    font-size: 0.925rem;
     color: var(--text-muted);
-    margin-top: 0.25rem;
+    margin-top: 0.35rem;
   }
 }
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
 }
 
 .kpi-card {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.35rem 1.5rem;
+  gap: 1.35rem;
+  padding: 1.5rem 1.65rem;
+  border-radius: 14px;
 
   .kpi-icon {
     width: 52px;
