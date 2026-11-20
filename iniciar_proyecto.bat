@@ -1,41 +1,25 @@
 @echo off
-title EcoTechTrack - Servidor Spring Boot 3
-chcp 65001 > nul
-cls
+title EcoTechTrack - Sistema Completo
+cd /d "%~dp0"
 
 echo =====================================================================
-echo               ECOTECHTRACK - SISTEMA DE TRAZABILIDAD RAEE            
-echo                  Avance 1 - Desarrollo Web Integrado (UTP)           
-echo =====================================================================
-echo.
-
-:: Establecer ruta de JDK 21 instalada en el equipo
-set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
-set "PATH=%JAVA_HOME%\bin;%PATH%"
-
-:: Verificar si Java 21 existe
-if not exist "%JAVA_HOME%\bin\java.exe" (
-    echo [ERROR] No se encontro el JDK en: %JAVA_HOME%
-    echo Por favor verifica la ruta de instalacion de Java 17 o 21.
-    pause
-    exit /b 1
-)
-
-echo [*] Configurado JAVA_HOME: %JAVA_HOME%
-echo [*] Directorio del proyecto: %~dp0ecotechtrack
-echo.
-
-:: Abrir el navegador automaticamente luego de 6 segundos en segundo plano
-start "" powershell -NoProfile -Command "Start-Sleep -Seconds 6; Start-Process 'http://localhost:8080/'"
-
-echo [*] Iniciando servidor Spring Boot en http://localhost:8080/ ...
-echo [*] La aplicacion se abrira automaticamente en tu navegador.
-echo.
-echo Presiona [Ctrl + C] en cualquier momento para detener el servidor.
+echo           ECOTECHTRACK - SISTEMA DE TRAZABILIDAD RAEE (UTP)           
+echo           Integracion Completa: Spring Boot (8080) + Angular (4200)   
 echo =====================================================================
 echo.
 
-cd /d "%~dp0ecotechtrack"
-"..\apache-maven-3.9.9\bin\mvn.cmd" spring-boot:run
+start "EcoTechTrack Backend" cmd /c "%~dp0ecotechtrack\run-backend.bat"
+start "EcoTechTrack Frontend" cmd /c "%~dp0ecotechtrack-frontend\run-frontend.bat"
 
+echo [*] Esperando inicializacion de servicios...
+powershell -NoProfile -Command "Start-Sleep -Seconds 10; Start-Process 'http://localhost:4200/'"
+
+echo.
+echo =====================================================================
+echo  Sistema iniciado con exito!
+echo  - Frontend: http://localhost:4200/
+echo  - Backend:  http://localhost:8080/
+echo  - H2 DB:    http://localhost:8080/h2-console
+echo  Credenciales: admin / Admin123!
+echo =====================================================================
 pause
