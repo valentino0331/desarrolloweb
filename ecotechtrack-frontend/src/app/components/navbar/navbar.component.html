@@ -1,7 +1,9 @@
 <header class="navbar-wrapper">
   <div class="navbar-container">
     <a routerLink="/dashboard" class="brand">
-      <span class="brand-icon">🌱</span>
+      <div class="brand-icon">
+        <i class="bi bi-recycle"></i>
+      </div>
       <div class="brand-text">
         <span class="brand-title">EcoTechTrack</span>
         <span class="brand-sub">Trazabilidad RAEE • UTP</span>
@@ -10,16 +12,20 @@
 
     <nav class="nav-links" *ngIf="authService.isAuthenticated()">
       <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
-        📊 Dashboard
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
       </a>
       <a routerLink="/residuos" routerLinkActive="active" class="nav-link">
-        📦 Residuos RAEE
+        <i class="bi bi-boxes"></i>
+        <span>Residuos RAEE</span>
       </a>
       <a routerLink="/almacenes" routerLinkActive="active" class="nav-link">
-        🏢 Almacenes
+        <i class="bi bi-building"></i>
+        <span>Almacenes</span>
       </a>
       <a routerLink="/empresas" routerLinkActive="active" class="nav-link">
-        🚛 Operadores MINAM
+        <i class="bi bi-truck"></i>
+        <span>Operadores MINAM</span>
       </a>
     </nav>
 
@@ -44,14 +50,21 @@
         </div>
 
         <button (click)="logout()" class="btn btn-secondary btn-sm btn-logout" title="Cerrar sesión">
-          🚪 Salir
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Salir</span>
         </button>
       </ng-container>
 
       <ng-template #anonView>
         <div class="auth-buttons">
-          <a routerLink="/login" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
-          <a routerLink="/register" class="btn btn-primary btn-sm">Registrarse</a>
+          <a routerLink="/login" class="btn btn-secondary btn-sm">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Iniciar Sesión
+          </a>
+          <a routerLink="/register" class="btn btn-primary btn-sm">
+            <i class="bi bi-person-plus"></i>
+            Registrarse
+          </a>
         </div>
       </ng-template>
     </div>

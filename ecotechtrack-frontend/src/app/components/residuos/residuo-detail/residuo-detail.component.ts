@@ -22,6 +22,15 @@ export class ResiduoDetailComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
+  etapas = [
+    { key: EstadoResiduo.DECLARADO_BAJA, label: 'Baja Registrada', icon: 'bi-clipboard-x' },
+    { key: EstadoResiduo.ALMACENADO_TEMPORAL, label: 'En Custodia', icon: 'bi-archive' },
+    { key: EstadoResiduo.SOLICITUD_RECOJO, label: 'Solicitud Recojo', icon: 'bi-bell' },
+    { key: EstadoResiduo.EN_TRANSITO, label: 'En Tránsito', icon: 'bi-truck' },
+    { key: EstadoResiduo.ENTREGADO_GESTOR, label: 'En Planta Gestor', icon: 'bi-building-check' },
+    { key: EstadoResiduo.VALORIZADO, label: 'Valorizado / Final', icon: 'bi-recycle' }
+  ];
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
@@ -53,6 +62,27 @@ export class ResiduoDetailComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  getEtapaIndex(estado: EstadoResiduo): number {
+    const orden = [
+      EstadoResiduo.DECLARADO_BAJA,
+      EstadoResiduo.ALMACENADO_TEMPORAL,
+      EstadoResiduo.SOLICITUD_RECOJO,
+      EstadoResiduo.EN_TRANSITO,
+      EstadoResiduo.ENTREGADO_GESTOR,
+      EstadoResiduo.VALORIZADO,
+      EstadoResiduo.DISPOSICION_FINAL
+    ];
+    return orden.indexOf(estado);
+  }
+
+  getEtapaStatus(index: number): 'completed' | 'active' | 'pending' {
+    if (!this.residuo) return 'pending';
+    const currentIndex = this.getEtapaIndex(this.residuo.estado);
+    if (index < currentIndex) return 'completed';
+    if (index === currentIndex) return 'active';
+    return 'pending';
   }
 
   getEstadoClass(estado: EstadoResiduo): string {

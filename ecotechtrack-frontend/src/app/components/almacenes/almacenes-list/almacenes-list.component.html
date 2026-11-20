@@ -5,40 +5,60 @@
       <p class="page-subtitle">Puntos de acopio autorizados para la custodia física de RAEE dados de baja</p>
     </div>
     <button *ngIf="authService.isAdmin()" (click)="mostrarModal = true" class="btn btn-primary">
-      ➕ Registrar Almacén (ADMIN)
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Registrar Almacén (ADMIN)</span>
     </button>
   </div>
 
   <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ errorMessage }}</span>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">
-    Cargando infraestructura de almacenes...
+    <div class="spinner"></div>
+    <span>Cargando infraestructura de almacenes...</span>
   </div>
 
   <div *ngIf="!isLoading && almacenes.length === 0" class="empty-state">
-    No hay almacenes registrados en el sistema.
+    <i class="bi bi-building"></i>
+    <p>No hay almacenes registrados en el sistema.</p>
   </div>
 
   <div *ngIf="!isLoading && almacenes.length > 0" class="almacenes-grid">
     <div *ngFor="let alm of almacenes" class="card almacen-card card-hover">
       <div class="card-header">
-        <div>
-          <span class="alm-code">{{ alm.codigo }}</span>
+        <div class="alm-title-area">
+          <span class="code-badge">{{ alm.codigo }}</span>
           <h3 class="alm-name">{{ alm.nombre }}</h3>
         </div>
-        <span class="badge badge-almacen">Capacidad: {{ alm.capacidadKg }} kg</span>
+        <span class="badge badge-almacen">
+          <i class="bi bi-archive"></i>
+          <span>Capacidad: {{ alm.capacidadKg }} kg</span>
+        </span>
       </div>
 
       <div class="alm-details">
-        <p><strong>📍 Sede:</strong> {{ alm.sede }}</p>
-        <p *ngIf="alm.direccion"><strong>Dirección:</strong> {{ alm.direccion }}</p>
-        <p><strong>👤 Custodio Responsable:</strong> {{ alm.responsable || 'No asignado' }}</p>
+        <p>
+          <i class="bi bi-geo-alt text-secondary"></i>
+          <strong>Sede:</strong>
+          <span>{{ alm.sede }}</span>
+        </p>
+        <p *ngIf="alm.direccion">
+          <i class="bi bi-signpost-2 text-muted"></i>
+          <strong>Dirección:</strong>
+          <span>{{ alm.direccion }}</span>
+        </p>
+        <p>
+          <i class="bi bi-person-badge text-primary"></i>
+          <strong>Custodio:</strong>
+          <span>{{ alm.responsable || 'No asignado' }}</span>
+        </p>
       </div>
     </div>
   </div>
@@ -48,8 +68,13 @@
 <div *ngIf="mostrarModal" class="modal-overlay">
   <div class="modal-dialog">
     <div class="modal-header">
-      <h3>Registrar Nuevo Almacén de Acopio</h3>
-      <button (click)="mostrarModal = false" class="btn-close">&times;</button>
+      <h3>
+        <i class="bi bi-building-add text-primary"></i>
+        <span>Registrar Nuevo Almacén de Acopio</span>
+      </h3>
+      <button (click)="mostrarModal = false" class="btn-close">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
     <form [formGroup]="almacenForm" (ngSubmit)="guardarAlmacen()">
@@ -60,29 +85,42 @@
         </div>
 
         <div class="form-group">
-          <label for="nombre">Nombre Descriptivo *</label>
-          <input id="nombre" type="text" formControlName="nombre" class="form-control" placeholder="ej: Depósito Central Sede Sur" />
+          <label for="nombre">Nombre Identificatorio *</label>
+          <input id="nombre" type="text" formControlName="nombre" class="form-control" placeholder="ej: Depósito Central San Isidro" />
+        </div>
+
+        <div class="form-row grid-2">
+          <div class="form-group">
+            <label for="sede">Sede / Campus *</label>
+            <input id="sede" type="text" formControlName="sede" class="form-control" placeholder="ej: Campus Lima Centro" />
+          </div>
+
+          <div class="form-group">
+            <label for="capacidadKg">Capacidad Máxima (kg) *</label>
+            <input id="capacidadKg" type="number" formControlName="capacidadKg" class="form-control" placeholder="ej: 5000" />
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="sede">Sede / Campus *</label>
-          <input id="sede" type="text" formControlName="sede" class="form-control" placeholder="ej: Campus Villa El Salvador" />
+          <label for="direccion">Dirección Física</label>
+          <input id="direccion" type="text" formControlName="direccion" class="form-control" placeholder="ej: Av. Arequipa 265, Piso 1" />
         </div>
 
         <div class="form-group">
-          <label for="capacidadKg">Capacidad Máxima en Kilogramos (kg) *</label>
-          <input id="capacidadKg" type="number" formControlName="capacidadKg" class="form-control" placeholder="ej: 2500" />
-        </div>
-
-        <div class="form-group">
-          <label for="responsable">Responsable de Almacén *</label>
-          <input id="responsable" type="text" formControlName="responsable" class="form-control" placeholder="ej: Lic. Carlos Mendoza" />
+          <label for="responsable">Custodio Responsable</label>
+          <div class="input-icon-group">
+            <i class="bi bi-person"></i>
+            <input id="responsable" type="text" formControlName="responsable" class="form-control" placeholder="ej: Ing. Mario Vargas" />
+          </div>
         </div>
       </div>
 
       <div class="modal-footer">
         <button type="button" (click)="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Almacén</button>
+        <button type="submit" class="btn btn-primary" [disabled]="almacenForm.invalid">
+          <i class="bi bi-check2"></i>
+          <span>Guardar Almacén</span>
+        </button>
       </div>
     </form>
   </div>

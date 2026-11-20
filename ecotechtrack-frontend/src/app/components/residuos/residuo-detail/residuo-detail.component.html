@@ -5,14 +5,46 @@
       <h1 class="page-title">{{ residuo.descripcion }}</h1>
     </div>
     <div class="header-actions">
-      <a routerLink="/residuos" class="btn btn-secondary">← Volver al Listado</a>
+      <a routerLink="/residuos" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i>
+        <span>Volver al Inventario</span>
+      </a>
       <a
         *ngIf="authService.isOperador()"
         [routerLink]="['/residuos', residuo.id, 'editar']"
         class="btn btn-primary"
       >
-        ✏️ Editar Especificaciones
+        <i class="bi bi-pencil-square"></i>
+        <span>Editar Especificaciones</span>
       </a>
+    </div>
+  </div>
+
+  <!-- Stepper Visual de la Cadena de Custodia -->
+  <div class="card stepper-card">
+    <div class="stepper-header">
+      <h3>
+        <i class="bi bi-diagram-3-fill text-primary"></i>
+        <span>Estado en la Cadena de Custodia Ambiental</span>
+      </h3>
+      <span class="badge" [ngClass]="getEstadoClass(residuo.estado)">
+        <span class="status-dot"></span>
+        {{ formatearTexto(residuo.estado) }}
+      </span>
+    </div>
+
+    <div class="stepper-timeline">
+      <div
+        *ngFor="let etapa of etapas; let i = index"
+        class="step-node"
+        [ngClass]="getEtapaStatus(i)"
+      >
+        <div class="step-icon-circle">
+          <i *ngIf="getEtapaStatus(i) === 'completed'" class="bi bi-check-lg"></i>
+          <i *ngIf="getEtapaStatus(i) !== 'completed'" class="bi" [ngClass]="etapa.icon"></i>
+        </div>
+        <span class="step-title">{{ etapa.label }}</span>
+      </div>
     </div>
   </div>
 
@@ -20,8 +52,12 @@
     <!-- Ficha Técnica -->
     <div class="card info-card">
       <div class="card-header">
-        <h2>📋 Ficha Técnica y Custodia</h2>
+        <h2>
+          <i class="bi bi-file-earmark-text-fill text-primary"></i>
+          <span>Ficha Técnica y Custodia</span>
+        </h2>
         <span class="badge" [ngClass]="getEstadoClass(residuo.estado)">
+          <span class="status-dot"></span>
           {{ formatearTexto(residuo.estado) }}
         </span>
       </div>
@@ -54,22 +90,31 @@
 
         <div class="spec-item">
           <span class="spec-label">Almacén de Depósito</span>
-          <span class="spec-value">{{ residuo.ubicacionAlmacen }}</span>
+          <span class="spec-value">
+            <i class="bi bi-building"></i> {{ residuo.ubicacionAlmacen }}
+          </span>
         </div>
 
         <div class="spec-item">
           <span class="spec-label">Empresa Operadora MINAM</span>
-          <span class="spec-value">{{ residuo.empresaGestora || 'Pendiente de asignación' }}</span>
+          <span class="spec-value">
+            <i class="bi bi-truck"></i> {{ residuo.empresaGestora || 'Pendiente de asignación' }}
+          </span>
         </div>
 
         <div class="spec-item">
           <span class="spec-label">Fecha de Declaración de Baja</span>
-          <span class="spec-value">{{ residuo.fechaRegistro }}</span>
+          <span class="spec-value">
+            <i class="bi bi-calendar3"></i> {{ residuo.fechaRegistro }}
+          </span>
         </div>
       </div>
 
       <div class="notes-box" *ngIf="residuo.observaciones">
-        <h4>Observaciones Técnicas Registradas:</h4>
+        <h4>
+          <i class="bi bi-chat-left-text"></i>
+          <span>Observaciones Técnicas:</span>
+        </h4>
         <p>{{ residuo.observaciones }}</p>
       </div>
     </div>
@@ -77,41 +122,43 @@
     <!-- Línea de Tiempo de Auditoría y Trazabilidad -->
     <div class="card timeline-card">
       <div class="card-header">
-        <h2>⏱️ Cadena de Custodia (Trazabilidad)</h2>
+        <h2>
+          <i class="bi bi-clock-history text-secondary"></i>
+          <span>Registro Histórico de Auditoría</span>
+        </h2>
         <span class="badge badge-user">{{ historial.length }} Eventos</span>
       </div>
 
-      <div *ngIf="historial.length === 0" class="empty-timeline">
-        No hay movimientos históricos registrados para este residuo.
+      <div *ngIf="historial.length === 0" class="empty-state">
+        <i class="bi bi-clock"></i>
+        <p>No hay eventos de transición registrados aún.</p>
       </div>
 
-      <div class="timeline" *ngIf="historial.length > 0">
-        <div *ngFor="let evento of historial" class="timeline-item">
-          <div class="timeline-marker"></div>
+      <div *ngIf="historial.length > 0" class="timeline-list">
+        <div *ngFor="let h of historial" class="timeline-item">
+          <div class="timeline-marker">
+            <i class="bi bi-circle-fill"></i>
+          </div>
           <div class="timeline-content">
-            <div class="event-header">
-              <span class="badge" [ngClass]="getEstadoClass(evento.estadoNuevo)">
-                {{ formatearTexto(evento.estadoNuevo) }}
+            <div class="timeline-top">
+              <span class="badge" [ngClass]="getEstadoClass(h.estadoNuevo)">
+                <span class="status-dot"></span>
+                {{ formatearTexto(h.estadoNuevo) }}
               </span>
-              <span class="event-date">{{ evento.fechaMovimiento }}</span>
+              <span class="timeline-date">
+                <i class="bi bi-calendar3"></i> {{ h.fechaMovimiento }}
+              </span>
             </div>
-            <div class="event-meta">
-              <strong>Responsable:</strong> {{ evento.responsable }}
-            </div>
-            <p class="event-desc" *ngIf="evento.observaciones">
-              {{ evento.observaciones }}
+            <p class="timeline-actor">
+              <i class="bi bi-person-badge"></i>
+              <strong>Responsable:</strong> {{ h.responsable }}
+            </p>
+            <p class="timeline-obs" *ngIf="h.observaciones">
+              {{ h.observaciones }}
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div *ngIf="isLoading" class="loading-full">
-  Cargando detalle del residuo electrónico...
-</div>
-
-<div *ngIf="!isLoading && !residuo" class="alert alert-danger text-center">
-  {{ errorMessage || 'No se pudo cargar la información del residuo.' }}
 </div>

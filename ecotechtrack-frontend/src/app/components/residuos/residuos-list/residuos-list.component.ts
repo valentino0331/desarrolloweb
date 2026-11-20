@@ -43,7 +43,7 @@ export class ResiduosListComponent implements OnInit {
   filtroFechaFin = '';
   mostrarFiltroFechas = false;
 
-  // Enums para desplegables
+  // Enums para desplegables y chips
   estados = Object.values(EstadoResiduo);
   categorias = Object.values(CategoriaRAEE);
 
@@ -82,11 +82,16 @@ export class ResiduosListComponent implements OnInit {
         this.residuos = data;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.errorMessage = 'Error al cargar los residuos desde la API.';
       }
     });
+  }
+
+  seleccionarFiltroEstado(est: EstadoResiduo | ''): void {
+    this.filtroEstado = est;
+    this.cargarDatos();
   }
 
   cargarCatalogos(): void {

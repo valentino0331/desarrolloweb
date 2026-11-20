@@ -3,67 +3,92 @@
     <div>
       <h1 class="page-title">Inventario y Trazabilidad de Residuos RAEE</h1>
       <p class="page-subtitle">
-        Consulta, filtrado avanzado mediante JPQL y avance en la cadena de custodia
+        Consulta multicriterio mediante JPQL, auditoría de pesos y control de la cadena de custodia
       </p>
     </div>
     <div class="header-actions" *ngIf="authService.isOperador()">
       <a routerLink="/residuos/nuevo" class="btn btn-primary">
-        ➕ Declarar Nuevo RAEE
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>Declarar Nuevo RAEE</span>
       </a>
     </div>
   </div>
 
   <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ errorMessage }}</span>
   </div>
 
-  <!-- Barra de Filtros JPQL Avanzados -->
+  <!-- Barra de Filtros Rápidos / Status Chips -->
+  <div class="filter-chips">
+    <button
+      type="button"
+      class="chip-btn"
+      [class.active]="filtroEstado === ''"
+      (click)="seleccionarFiltroEstado('')"
+    >
+      <i class="bi bi-collection"></i>
+      <span>Todos ({{ residuos.length }})</span>
+    </button>
+    <button
+      *ngFor="let est of estados"
+      type="button"
+      class="chip-btn"
+      [class.active]="filtroEstado === est"
+      (click)="seleccionarFiltroEstado(est)"
+    >
+      <span class="status-dot"></span>
+      <span>{{ formatearTexto(est) }}</span>
+    </button>
+  </div>
+
+  <!-- Barra de Búsqueda y Filtros JPQL Avanzados -->
   <div class="card filters-card">
     <div class="filters-grid">
       <div class="filter-item search-item">
         <label>Búsqueda Multicriterio (JPQL)</label>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Buscar por descripción, marca o modelo..."
-          [(ngModel)]="filtroTermino"
-          (keyup.enter)="cargarDatos()"
-        />
+        <div class="input-icon-group">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar por descripción, marca, modelo o serie..."
+            [(ngModel)]="filtroTermino"
+            (keyup.enter)="cargarDatos()"
+          />
+        </div>
       </div>
 
       <div class="filter-item">
-        <label>Estado en Ciclo de Vida</label>
-        <select class="form-control" [(ngModel)]="filtroEstado" (change)="cargarDatos()">
-          <option value="">Todos los Estados</option>
-          <option *ngFor="let est of estados" [value]="est">
-            {{ formatearTexto(est) }}
-          </option>
-        </select>
-      </div>
-
-      <div class="filter-item">
-        <label>Categoría RAEE (MINAM)</label>
-        <select class="form-control" [(ngModel)]="filtroCategoria" (change)="cargarDatos()">
-          <option value="">Todas las Categorías</option>
-          <option *ngFor="let cat of categorias" [value]="cat">
-            {{ formatearTexto(cat) }}
-          </option>
-        </select>
+        <label>Categoría RAEE (Directiva MINAM)</label>
+        <div class="input-icon-group">
+          <i class="bi bi-tags"></i>
+          <select class="form-control" [(ngModel)]="filtroCategoria" (change)="cargarDatos()">
+            <option value="">Todas las Categorías</option>
+            <option *ngFor="let cat of categorias" [value]="cat">
+              {{ formatearTexto(cat) }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div class="filter-actions">
         <button (click)="cargarDatos()" class="btn btn-primary btn-sm">
-          🔍 Filtrar
+          <i class="bi bi-funnel-fill"></i>
+          <span>Filtrar</span>
         </button>
         <button (click)="mostrarFiltroFechas = !mostrarFiltroFechas" class="btn btn-secondary btn-sm">
-          📅 Por Fechas
+          <i class="bi bi-calendar-event"></i>
+          <span>Por Fechas</span>
         </button>
-        <button (click)="limpiarFiltros()" class="btn btn-secondary btn-sm">
-          ↺ Limpiar
+        <button (click)="limpiarFiltros()" class="btn btn-secondary btn-sm" title="Restablecer filtros">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          <span>Limpiar</span>
         </button>
       </div>
     </div>
@@ -72,15 +97,16 @@
     <div *ngIf="mostrarFiltroFechas" class="dates-filter-panel">
       <div class="date-inputs">
         <div class="form-group mb-0">
-          <label>Fecha Inicio:</label>
+          <label>Fecha Inicio (Registro):</label>
           <input type="date" class="form-control" [(ngModel)]="filtroFechaInicio" />
         </div>
         <div class="form-group mb-0">
-          <label>Fecha Fin:</label>
+          <label>Fecha Fin (Registro):</label>
           <input type="date" class="form-control" [(ngModel)]="filtroFechaFin" />
         </div>
         <button (click)="aplicarFiltroFechas()" class="btn btn-info btn-sm align-self-end">
-          Ejecutar Consulta JPQL
+          <i class="bi bi-database-search"></i>
+          <span>Ejecutar Consulta JPQL</span>
         </button>
       </div>
     </div>
@@ -89,11 +115,17 @@
   <!-- Tabla de Residuos -->
   <div class="card table-card">
     <div *ngIf="isLoading" class="loading-state">
-      Cargando residuos desde Spring Boot...
+      <div class="spinner"></div>
+      <span>Consultando catálogo de residuos desde Spring Boot...</span>
     </div>
 
     <div *ngIf="!isLoading && residuos.length === 0" class="empty-state">
-      No se encontraron residuos electrónicos que coincidan con los filtros aplicados.
+      <i class="bi bi-inbox"></i>
+      <p>No se encontraron residuos electrónicos que coincidan con los criterios de búsqueda.</p>
+      <button (click)="limpiarFiltros()" class="btn btn-secondary btn-sm mt-2">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        <span>Restablecer Filtros</span>
+      </button>
     </div>
 
     <div *ngIf="!isLoading && residuos.length > 0" class="table-responsive">
@@ -118,56 +150,68 @@
             <td>
               <div class="desc-cell">
                 <span class="desc-main">{{ residuo.descripcion }}</span>
-                <span class="desc-sub">{{ residuo.marca }} {{ residuo.modelo }} • S/N: {{ residuo.numeroSerie }}</span>
+                <span class="desc-sub">
+                  {{ residuo.marca }} {{ residuo.modelo }} • S/N: {{ residuo.numeroSerie }}
+                </span>
               </div>
             </td>
             <td>
               <span class="category-text">{{ formatearTexto(residuo.categoria) }}</span>
             </td>
             <td>
-              <strong>{{ residuo.pesoKg }}</strong> kg
+              <span class="weight-cell">
+                <strong>{{ residuo.pesoKg }}</strong> kg
+              </span>
             </td>
             <td>
-              <span class="storage-text">{{ residuo.ubicacionAlmacen }}</span>
+              <span class="storage-text">
+                <i class="bi bi-building"></i>
+                {{ residuo.ubicacionAlmacen }}
+              </span>
             </td>
             <td>
-              <span class="operator-text">{{ residuo.empresaGestora || 'Sin asignar' }}</span>
+              <span class="operator-text">
+                <i class="bi bi-truck"></i>
+                {{ residuo.empresaGestora || 'Pendiente' }}
+              </span>
             </td>
             <td>
               <span class="badge" [ngClass]="getEstadoClass(residuo.estado)">
+                <span class="status-dot"></span>
                 {{ formatearTexto(residuo.estado) }}
               </span>
             </td>
             <td class="text-right actions-cell">
-              <a [routerLink]="['/residuos', residuo.id]" class="btn btn-secondary btn-sm" title="Ver detalle e historial">
-                👁️
+              <a [routerLink]="['/residuos', residuo.id]" class="btn btn-secondary btn-sm btn-icon" title="Ver detalle e historial">
+                <i class="bi bi-eye"></i>
               </a>
 
               <button
                 *ngIf="authService.isOperador()"
                 (click)="abrirModalEstado(residuo)"
                 class="btn btn-info btn-sm"
-                title="Avanzar estado en la cadena de trazabilidad"
+                title="Avanzar estado en la cadena de custodia"
               >
-                🔄 Estado
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Estado</span>
               </button>
 
               <a
                 *ngIf="authService.isOperador()"
                 [routerLink]="['/residuos', residuo.id, 'editar']"
-                class="btn btn-secondary btn-sm"
+                class="btn btn-secondary btn-sm btn-icon"
                 title="Editar especificaciones"
               >
-                ✏️
+                <i class="bi bi-pencil"></i>
               </a>
 
               <button
                 *ngIf="authService.isAdmin()"
                 (click)="eliminarResiduo(residuo.id, residuo.codigoIdentificacion)"
-                class="btn btn-danger btn-sm"
+                class="btn btn-danger btn-sm btn-icon"
                 title="Eliminar permanentemente (Solo ADMIN)"
               >
-                🗑️
+                <i class="bi bi-trash3"></i>
               </button>
             </td>
           </tr>
@@ -181,8 +225,13 @@
 <div *ngIf="mostrarModalEstado" class="modal-overlay">
   <div class="modal-dialog">
     <div class="modal-header">
-      <h3>Avanzar Estado de Trazabilidad: {{ residuoSeleccionado?.codigoIdentificacion }}</h3>
-      <button (click)="cerrarModalEstado()" class="btn-close">&times;</button>
+      <h3>
+        <i class="bi bi-arrow-repeat text-secondary"></i>
+        <span>Avanzar Estado: {{ residuoSeleccionado?.codigoIdentificacion }}</span>
+      </h3>
+      <button (click)="cerrarModalEstado()" class="btn-close">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
     <form [formGroup]="estadoForm" (ngSubmit)="guardarCambioEstado()">
@@ -192,70 +241,69 @@
           <p>
             <strong>Estado Actual:</strong>
             <span class="badge" [ngClass]="getEstadoClass(residuoSeleccionado!.estado)">
+              <span class="status-dot"></span>
               {{ formatearTexto(residuoSeleccionado!.estado) }}
             </span>
           </p>
         </div>
 
         <div class="form-group">
-          <label for="nuevoEstado">Nuevo Estado a Asignar *</label>
+          <label for="nuevoEstado">Nuevo Estado en la Cadena de Custodia *</label>
           <select id="nuevoEstado" formControlName="nuevoEstado" class="form-control">
-            <option value="" disabled>Seleccione el siguiente estado...</option>
+            <option value="" disabled>Seleccione el nuevo estado...</option>
             <option *ngFor="let est of estados" [value]="est">
               {{ formatearTexto(est) }}
             </option>
           </select>
           <div *ngIf="estadoForm.get('nuevoEstado')?.invalid && estadoForm.get('nuevoEstado')?.touched" class="error-feedback">
-            Debe seleccionar el nuevo estado en la cadena.
+            <i class="bi bi-exclamation-circle"></i>
+            <span>Debe seleccionar el nuevo estado del residuo.</span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="responsable">Responsable de la Operación *</label>
-          <input
-            id="responsable"
-            type="text"
-            formControlName="responsable"
-            class="form-control"
-            placeholder="Nombre y cargo del responsable"
-          />
-          <div *ngIf="estadoForm.get('responsable')?.invalid && estadoForm.get('responsable')?.touched" class="error-feedback">
-            El nombre del responsable es obligatorio.
+          <div class="input-icon-group">
+            <i class="bi bi-person"></i>
+            <input id="responsable" type="text" formControlName="responsable" class="form-control" />
           </div>
         </div>
 
         <div class="form-group">
-          <label for="observaciones">Observaciones / Justificación de Auditoría *</label>
+          <label for="observaciones">Observaciones / Motivo de la Transición *</label>
           <textarea
             id="observaciones"
-            rows="3"
             formControlName="observaciones"
             class="form-control"
-            placeholder="Detalle motivos, número de guía de remisión o acta de entrega..."
+            rows="3"
+            placeholder="ej: Traslado aprobado hacia planta de valorización con guía de remisión N° 002-984..."
           ></textarea>
           <div *ngIf="estadoForm.get('observaciones')?.invalid && estadoForm.get('observaciones')?.touched" class="error-feedback">
-            Las observaciones de auditoría son requeridas.
+            <i class="bi bi-exclamation-circle"></i>
+            <span>Las observaciones son obligatorias para la auditoría de trazabilidad.</span>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="almacenModal">Almacén de Custodia (Opcional si cambia ubicación)</label>
-          <select id="almacenModal" formControlName="almacenId" class="form-control">
-            <option [ngValue]="null">Mantener almacén actual</option>
-            <option *ngFor="let alm of almacenes" [value]="alm.id">
-              {{ alm.nombre }} ({{ alm.sede }})
-            </option>
-          </select>
-        </div>
+        <div class="form-row grid-2">
+          <div class="form-group">
+            <label for="almacenId">Almacén Destino (Opcional)</label>
+            <select id="almacenId" formControlName="almacenId" class="form-control">
+              <option [ngValue]="null">Mantener almacén actual</option>
+              <option *ngFor="let alm of almacenes" [ngValue]="alm.id">
+                {{ alm.codigo }} - {{ alm.nombre }}
+              </option>
+            </select>
+          </div>
 
-        <div class="form-group">
-          <label for="empresaModal">Empresa Gestora / Operador MINAM</label>
-          <select id="empresaModal" formControlName="empresaGestoraId" class="form-control">
-            <option [ngValue]="null">Sin asignar / Operación interna</option>
-            <option *ngFor="let emp of empresas" [value]="emp.id">
-              {{ emp.razonSocial }} ({{ emp.registroAutorizacion }})
-            </option>
-          </select>
+          <div class="form-group">
+            <label for="empresaGestoraId">Operador Gestor Destino (Opcional)</label>
+            <select id="empresaGestoraId" formControlName="empresaGestoraId" class="form-control">
+              <option [ngValue]="null">Sin operador asignado</option>
+              <option *ngFor="let emp of empresas" [ngValue]="emp.id">
+                {{ emp.razonSocial }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -263,8 +311,9 @@
         <button type="button" (click)="cerrarModalEstado()" class="btn btn-secondary">
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary">
-          💾 Registrar Movimiento en Base de Datos
+        <button type="submit" class="btn btn-primary" [disabled]="estadoForm.invalid">
+          <i class="bi bi-check2"></i>
+          <span>Registrar Transición</span>
         </button>
       </div>
     </form>

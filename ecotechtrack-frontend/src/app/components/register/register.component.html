@@ -1,99 +1,131 @@
 <div class="register-page">
   <div class="register-card">
     <div class="register-header">
-      <span class="icon">📝</span>
+      <div class="register-badge-icon">
+        <i class="bi bi-person-plus-fill"></i>
+      </div>
       <h2>Crear Cuenta Nueva</h2>
       <p>Registra un nuevo usuario en la base de datos con asignación de roles de seguridad</p>
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
+      <i class="bi bi-check-circle-fill"></i>
+      <span>{{ successMessage }}</span>
     </div>
 
     <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
       <div class="form-group">
         <label for="username">Nombre de Usuario (Username)</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          class="form-control"
-          [class.is-invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
-          placeholder="ej: jcarlos"
-        />
+        <div class="input-icon-group">
+          <i class="bi bi-person"></i>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            class="form-control"
+            [class.is-invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+            placeholder="ej: jcarlos"
+          />
+        </div>
         <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="error-feedback">
-          El nombre de usuario es obligatorio (3 a 50 caracteres).
+          <i class="bi bi-exclamation-circle"></i>
+          <span>El nombre de usuario es obligatorio (3 a 50 caracteres).</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="nombreCompleto">Nombre Completo y Cargo</label>
-        <input
-          id="nombreCompleto"
-          type="text"
-          formControlName="nombreCompleto"
-          class="form-control"
-          [class.is-invalid]="registerForm.get('nombreCompleto')?.invalid && registerForm.get('nombreCompleto')?.touched"
-          placeholder="ej: Ing. Juan Carlos Morales"
-        />
+        <div class="input-icon-group">
+          <i class="bi bi-person-vcard"></i>
+          <input
+            id="nombreCompleto"
+            type="text"
+            formControlName="nombreCompleto"
+            class="form-control"
+            [class.is-invalid]="registerForm.get('nombreCompleto')?.invalid && registerForm.get('nombreCompleto')?.touched"
+            placeholder="ej: Ing. Juan Carlos Morales"
+          />
+        </div>
         <div *ngIf="registerForm.get('nombreCompleto')?.invalid && registerForm.get('nombreCompleto')?.touched" class="error-feedback">
-          El nombre completo es obligatorio.
+          <i class="bi bi-exclamation-circle"></i>
+          <span>El nombre completo es obligatorio.</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="email">Correo Institucional / Corporativo</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          class="form-control"
-          [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-          placeholder="ej: jcarlos@ecotechtrack.pe"
-        />
+        <div class="input-icon-group">
+          <i class="bi bi-envelope"></i>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            placeholder="ej: jcarlos@ecotechtrack.pe"
+          />
+        </div>
         <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-feedback">
-          Ingrese un correo electrónico válido.
+          <i class="bi bi-exclamation-circle"></i>
+          <span>Ingrese un correo electrónico válido.</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="password">Contraseña Cifrada (BCrypt)</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="form-control"
-          [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-          placeholder="Mínimo 6 caracteres"
-        />
+        <div class="input-icon-group">
+          <i class="bi bi-key"></i>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            placeholder="Mínimo 6 caracteres"
+          />
+        </div>
         <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-feedback">
-          La contraseña debe tener al menos 6 caracteres.
+          <i class="bi bi-exclamation-circle"></i>
+          <span>La contraseña debe tener al menos 6 caracteres.</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="rol">Rol de Acceso en el Sistema</label>
-        <select id="rol" formControlName="rolSeleccionado" class="form-control">
-          <option *ngFor="let rol of rolesDisponibles" [value]="rol.value">
-            {{ rol.label }} ({{ rol.value }})
-          </option>
-        </select>
+        <div class="input-icon-group">
+          <i class="bi bi-shield-check"></i>
+          <select id="rol" formControlName="rolSeleccionado" class="form-control">
+            <option *ngFor="let rol of rolesDisponibles" [value]="rol.value">
+              {{ rol.label }} ({{ rol.value }})
+            </option>
+          </select>
+        </div>
         <span class="hint-text">Define los permisos en los endpoints protegidos por &#64;PreAuthorize</span>
       </div>
 
       <button type="submit" class="btn btn-primary btn-block" [disabled]="isLoading">
-        <span *ngIf="isLoading">Registrando usuario en H2/Spring Boot...</span>
-        <span *ngIf="!isLoading">Confirmar Registro ➔</span>
+        <span *ngIf="isLoading">
+          <i class="bi bi-arrow-repeat spin"></i>
+          <span>Registrando usuario en H2/Spring Boot...</span>
+        </span>
+        <span *ngIf="!isLoading">
+          <i class="bi bi-person-check-fill"></i>
+          <span>Confirmar Registro</span>
+        </span>
       </button>
     </form>
 
     <div class="register-footer">
-      ¿Ya tienes una cuenta?
-      <a routerLink="/login">Iniciar sesión</a>
+      <span>¿Ya tienes una cuenta activa?</span>
+      <a routerLink="/login">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span>Iniciar sesión</span>
+      </a>
     </div>
   </div>
 </div>

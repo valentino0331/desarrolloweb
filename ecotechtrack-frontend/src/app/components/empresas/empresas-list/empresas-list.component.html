@@ -5,41 +5,65 @@
       <p class="page-subtitle">Operadores formales autorizados por el MINAM para recojo, transporte y valorización ecológica</p>
     </div>
     <button *ngIf="authService.isAdmin()" (click)="mostrarModal = true" class="btn btn-primary">
-      ➕ Registrar Operador (ADMIN)
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Registrar Operador (ADMIN)</span>
     </button>
   </div>
 
   <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ errorMessage }}</span>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">
-    Cargando directorio de empresas operadoras...
+    <div class="spinner"></div>
+    <span>Cargando directorio de empresas operadoras...</span>
   </div>
 
   <div *ngIf="!isLoading && empresas.length === 0" class="empty-state">
-    No hay empresas gestoras registradas.
+    <i class="bi bi-truck"></i>
+    <p>No hay empresas gestoras registradas en el sistema.</p>
   </div>
 
   <div *ngIf="!isLoading && empresas.length > 0" class="empresas-grid">
     <div *ngFor="let emp of empresas" class="card empresa-card card-hover">
       <div class="card-header">
-        <div>
-          <span class="emp-ruc">RUC: {{ emp.ruc }}</span>
+        <div class="emp-title-area">
+          <span class="code-badge">RUC {{ emp.ruc }}</span>
           <h3 class="emp-name">{{ emp.razonSocial }}</h3>
         </div>
-        <span class="badge badge-valorizado">MINAM Vigente</span>
+        <span class="badge badge-valorizado">
+          <span class="status-dot"></span>
+          <span>MINAM Vigente</span>
+        </span>
       </div>
 
       <div class="emp-details">
-        <p><strong>📜 Autorización:</strong> {{ emp.registroAutorizacion }}</p>
-        <p *ngIf="emp.email"><strong>✉️ Correo:</strong> {{ emp.email }}</p>
-        <p *ngIf="emp.telefono"><strong>📞 Teléfono:</strong> {{ emp.telefono }}</p>
-        <p *ngIf="emp.direccion"><strong>📍 Planta:</strong> {{ emp.direccion }}</p>
+        <p>
+          <i class="bi bi-award text-primary"></i>
+          <strong>Autorización:</strong>
+          <span>{{ emp.registroAutorizacion }}</span>
+        </p>
+        <p *ngIf="emp.email">
+          <i class="bi bi-envelope text-secondary"></i>
+          <strong>Correo:</strong>
+          <span>{{ emp.email }}</span>
+        </p>
+        <p *ngIf="emp.telefono">
+          <i class="bi bi-telephone text-muted"></i>
+          <strong>Teléfono:</strong>
+          <span>{{ emp.telefono }}</span>
+        </p>
+        <p *ngIf="emp.direccion">
+          <i class="bi bi-geo-alt text-muted"></i>
+          <strong>Planta:</strong>
+          <span>{{ emp.direccion }}</span>
+        </p>
       </div>
     </div>
   </div>
@@ -49,8 +73,13 @@
 <div *ngIf="mostrarModal" class="modal-overlay">
   <div class="modal-dialog">
     <div class="modal-header">
-      <h3>Registrar Empresa Gestora de RAEE</h3>
-      <button (click)="mostrarModal = false" class="btn-close">&times;</button>
+      <h3>
+        <i class="bi bi-truck text-primary"></i>
+        <span>Registrar Empresa Gestora de RAEE</span>
+      </h3>
+      <button (click)="mostrarModal = false" class="btn-close">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
     <form [formGroup]="empresaForm" (ngSubmit)="guardarEmpresa()">
@@ -72,23 +101,35 @@
 
         <div class="form-group">
           <label for="email">Correo de Operaciones</label>
-          <input id="email" type="email" formControlName="email" class="form-control" placeholder="ej: contacto@ecogestores.pe" />
+          <div class="input-icon-group">
+            <i class="bi bi-envelope"></i>
+            <input id="email" type="email" formControlName="email" class="form-control" placeholder="ej: contacto@ecogestores.pe" />
+          </div>
         </div>
 
         <div class="form-group">
           <label for="telefono">Teléfono / Central</label>
-          <input id="telefono" type="text" formControlName="telefono" class="form-control" placeholder="ej: +51 1 450-9820" />
+          <div class="input-icon-group">
+            <i class="bi bi-telephone"></i>
+            <input id="telefono" type="text" formControlName="telefono" class="form-control" placeholder="ej: +51 1 450-9820" />
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="direccion">Dirección Legal / Planta de Tratamiento</label>
-          <input id="direccion" type="text" formControlName="direccion" class="form-control" placeholder="ej: Av. Materiales 2450, Cercado de Lima" />
+          <label for="direccion">Dirección de Planta de Valorización</label>
+          <div class="input-icon-group">
+            <i class="bi bi-geo-alt"></i>
+            <input id="direccion" type="text" formControlName="direccion" class="form-control" placeholder="ej: Av. Industrial 450, Callao" />
+          </div>
         </div>
       </div>
 
       <div class="modal-footer">
         <button type="button" (click)="mostrarModal = false" class="btn btn-secondary">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Empresa</button>
+        <button type="submit" class="btn btn-primary" [disabled]="empresaForm.invalid">
+          <i class="bi bi-check2"></i>
+          <span>Guardar Operador</span>
+        </button>
       </div>
     </form>
   </div>

@@ -1,6 +1,6 @@
 Write-Host "=====================================================================" -ForegroundColor Green
 Write-Host "          ECOTECHTRACK - SISTEMA DE TRAZABILIDAD RAEE (UTP)          " -ForegroundColor Green
-Write-Host "          Integración Completa: Spring Boot (8080) + Angular (4200)  " -ForegroundColor Green
+Write-Host "          Integraciï¿½n Completa: Spring Boot (8080) + Angular (4200)  " -ForegroundColor Green
 Write-Host "=====================================================================" -ForegroundColor Green
 
 $root = $PSScriptRoot

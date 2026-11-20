@@ -1,19 +1,20 @@
 .detail-page {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .code-title {
-  font-family: monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--primary);
   background-color: var(--primary-light);
-  padding: 0.2rem 0.5rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 4px;
+  border: 1px solid var(--primary-border);
   display: inline-block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .page-title {
@@ -22,9 +23,35 @@
   letter-spacing: -0.025em;
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.stepper-card {
+  padding: 1.5rem 1.75rem;
+
+  .stepper-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}
+
 .detail-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.25fr 1fr;
   gap: 1.5rem;
 
   @media (max-width: 960px) {
@@ -35,7 +62,7 @@
 .spec-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  gap: 1.35rem;
   margin-bottom: 1.5rem;
 
   .spec-item {
@@ -43,7 +70,7 @@
     flex-direction: column;
 
     .spec-label {
-      font-size: 0.75rem;
+      font-size: 0.725rem;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -54,10 +81,18 @@
       font-size: 0.95rem;
       font-weight: 600;
       color: var(--text-main);
-      margin-top: 0.2rem;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
 
-      &.monospace { font-family: monospace; }
-      &.highlight { font-size: 1.15rem; color: var(--primary); font-weight: 700; }
+      &.monospace { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+      &.highlight { font-size: 1.2rem; color: var(--primary); font-weight: 800; }
+
+      i.bi {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
     }
   }
 }
@@ -66,7 +101,7 @@
   background-color: #f8fafc;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 1rem;
+  padding: 1.15rem;
 
   h4 {
     font-size: 0.8rem;
@@ -74,24 +109,31 @@
     text-transform: uppercase;
     color: var(--text-muted);
     margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
   }
 
   p {
     font-size: 0.875rem;
     color: var(--text-main);
+    line-height: 1.5;
   }
 }
 
 /* Timeline vertical de auditoría */
-.timeline {
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
   position: relative;
   padding-left: 1.5rem;
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: 10px;
+    bottom: 10px;
     left: 7px;
     width: 2px;
     background-color: var(--border-color);
@@ -99,57 +141,73 @@
 
   .timeline-item {
     position: relative;
-    margin-bottom: 1.5rem;
-
-    &:last-child { margin-bottom: 0; }
 
     .timeline-marker {
       position: absolute;
       left: -1.5rem;
-      top: 4px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      border: 3px solid #ffffff;
-      box-shadow: 0 0 0 2px var(--primary);
+      top: 6px;
+      font-size: 0.65rem;
+      color: var(--primary);
+      background: #ffffff;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .timeline-content {
       background-color: #f8fafc;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      padding: 0.875rem 1rem;
+      padding: 0.95rem 1.15rem;
+      transition: var(--transition);
 
-      .event-header {
+      &:hover {
+        background-color: #ffffff;
+        border-color: #cbd5e1;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .timeline-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.4rem;
 
-        .event-date {
+        .timeline-date {
           font-size: 0.75rem;
           color: var(--text-muted);
-          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
         }
       }
 
-      .event-meta {
+      .timeline-actor {
         font-size: 0.8rem;
         color: var(--text-muted);
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
       }
 
-      .event-desc {
+      .timeline-obs {
         font-size: 0.85rem;
         color: var(--text-main);
+        line-height: 1.4;
       }
     }
   }
 }
 
-.empty-timeline, .loading-full {
+.empty-state {
   text-align: center;
-  padding: 3rem;
+  padding: 3rem 1.5rem;
   color: var(--text-muted);
+
+  i.bi {
+    font-size: 2rem;
+    color: var(--text-light);
+  }
 }
